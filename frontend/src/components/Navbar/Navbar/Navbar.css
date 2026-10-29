@@ -1,0 +1,241 @@
+.navbar {
+  min-height: 64px;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.navbar .logo {
+  width: 92px;
+  flex-shrink: 0;
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 26px;
+  color: #49557e;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-shrink: 0;
+}
+
+.navbar-right > img,
+.navbar-search-icon > img {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+}
+
+.navbar-search-icon {
+  position: relative;
+  display: flex;
+}
+
+/* FIX B-01: single canonical dot rule (was duplicated with conflicting sizes) */
+.navbar-search-icon .dot {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: tomato;
+}
+
+.navbar button {
+  background: transparent;
+  font-size: 15px;
+  color: #49557e;
+  border: 1px solid #ff6347;
+  padding: 9px 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.navbar button:hover {
+  background-color: #fff4f2;
+  border-color: #f45136;
+}
+
+.navbar .active {
+  border-bottom: 2px solid #49557e;
+}
+
+.navbar li {
+  cursor: pointer;
+}
+
+/* ── Profile dropdown ────────────────────────────────────────────────────── */
+
+.navbar-profile {
+  position: relative;
+}
+
+/* The clickable trigger button (profile image + arrow) */
+.navbar-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 0;
+  border-radius: 50px;
+  background: none;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.navbar-profile-btn:hover {
+  background: #f5f1f0;
+  border-color: transparent;
+}
+
+.navbar-profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.navbar-profile-arrow {
+  font-size: 9px;
+  color: #888;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Dropdown panel — shown by React state, not CSS hover */
+.navbar-profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 140px;
+  list-style: none;
+  padding: 6px 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px #00000022;
+  border: 1px solid #f0f0f0;
+  z-index: 200;
+  animation: dropIn 140ms ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.navbar-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 120ms, color 120ms;
+}
+
+.navbar-profile-link:hover {
+  background: #fff4f2;
+  color: tomato;
+}
+
+.navbar-profile-link span {
+  width: 16px;
+  color: #a76e57;
+  font-size: 16px;
+  text-align: center;
+}
+
+.navbar-logout-btn:hover {
+  background: #fff4f2;
+  color: tomato;
+  border-color: transparent;
+}
+
+.navbar-logout-btn img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: 0.55;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 1050px) {
+  .navbar .logo {
+    width: 140px;
+  }
+  .navbar-menu {
+    gap: 20px;
+    font-size: 17px;
+  }
+  .navbar-right {
+    gap: 30px;
+  }
+  .navbar-right img {
+    width: 22px;
+  }
+  /* FIX B-02: was "navbar-right button" (missing dot) — now correctly ".navbar-right button" */
+  .navbar-right button {
+    padding: 8px 25px;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar .logo {
+    width: 140px;
+  }
+  .navbar-menu {
+    gap: 15px;
+    font-size: 16px;
+  }
+  .navbar-right {
+    gap: 20px;
+  }
+  .navbar-right img {
+    width: 20px;
+  }
+  /* FIX B-02: was "navbar-right button" (missing dot) — now correctly ".navbar-right button" */
+  .navbar-right button {
+    padding: 7px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 750px) {
+  .navbar-menu {
+    display: none;
+  }
+}

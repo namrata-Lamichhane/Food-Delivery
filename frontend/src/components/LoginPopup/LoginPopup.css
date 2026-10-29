@@ -1,0 +1,112 @@
+.login-popup {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #00000090;
+}
+
+.login-popup-container {
+  width: min(100%, 400px);
+  padding: 28px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 48px #00000030;
+}
+
+.login-popup-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.login-popup-title h2 {
+  color: #252525;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.login-popup-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f3f0;
+  color: #393633;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.login-popup-inputs {
+  display: grid;
+  gap: 16px;
+}
+
+.login-popup-inputs label {
+  display: grid;
+  gap: 6px;
+  color: #494949;
+  font-size: 14px;
+}
+
+.login-popup-inputs input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.login-popup-inputs input:focus-visible,
+.login-popup button:focus-visible {
+  outline: 2px solid tomato;
+  outline-offset: 2px;
+}
+
+.login-popup-submit {
+  min-height: 46px;
+  border: 0;
+  border-radius: 6px;
+  background: tomato;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+}
+
+.login-popup-toggle {
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+}
+
+.login-popup-toggle button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: tomato;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.login-popup-error {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fff0f0;
+  color: #c0392b;
+  font-size: 13px;
+  border: 1px solid #fcd0d0;
+}
+
+.login-popup-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

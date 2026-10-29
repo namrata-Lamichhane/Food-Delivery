@@ -1,0 +1,121 @@
+.footer {
+  position: relative;
+  margin-top: 88px;
+  padding: 68px 24px 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 12% 0%, #3b302b 0, transparent 38%),
+    #252525;
+  color: #f5f2ef;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(140px, 0.7fr) minmax(220px, 1fr);
+  gap: clamp(40px, 8vw, 120px);
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+.footer-about {
+  max-width: 520px;
+}
+
+.footer-logo {
+  display: block;
+  width: 176px;
+  max-width: 100%;
+  margin: 0 0 22px;
+}
+
+.footer-about p,
+.footer-contact p {
+  max-width: 480px;
+  color: #c7c2bf;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.footer-socials a {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #77716d;
+  border-radius: 50%;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-3px);
+  border-color: tomato;
+  background: tomato;
+}
+
+.footer-socials img {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+}
+
+.footer-links,
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  padding-top: 5px;
+}
+
+.footer-links h2,
+.footer-contact h2 {
+  margin-bottom: 7px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.footer-links a,
+.footer-links span,
+.footer-contact a {
+  color: #c7c2bf;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: color 160ms ease;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover {
+  color: #ff765e;
+}
+
+.footer-bottom {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  border-top: 1px solid #514d4a;
+  padding-top: 20px;
+  color: #aaa4a0;
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width:750px) {
+  .footer-content{
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+  .footer-copyright{
+    text-align: center;
+  }
+}
+ 

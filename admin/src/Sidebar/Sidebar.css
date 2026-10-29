@@ -1,0 +1,118 @@
+.sidebar {
+  flex: 0 0 250px;
+  width: 250px;
+  border-right: 1px solid #e2e8f0;
+  background: #ffffff;
+  padding: 24px 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease-in-out;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  padding: 0 16px 12px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.sidebar-link:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.sidebar-link.active {
+  border-color: #fecaca;
+  background: #fff1ee;
+  color: #e23744;
+  font-weight: 600;
+}
+
+.sidebar-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: inherit;
+}
+
+.sidebar-asset-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.sidebar-label {
+  white-space: nowrap;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .sidebar {
+    position: fixed;
+    top: 62px;
+    left: 0;
+    bottom: 0;
+    z-index: 99;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
+    padding: 24px 16px;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-link {
+    border-radius: 8px;
+    border-right: 1px solid transparent;
+  }
+
+  .sidebar-link.active {
+    border-right-color: #fecaca;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 62px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 98;
+  }
+}

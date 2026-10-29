@@ -1,0 +1,469 @@
+.place-order {
+  container-name: order-page;
+  container-type: inline-size;
+  padding: 32px 0 80px;
+  color: #333;
+}
+
+.place-order-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+  align-items: start;
+  gap: clamp(44px, 8vw, 132px);
+}
+
+.delivery-details h1,
+.place-order-empty h1,
+.place-order-confirmation h1 {
+  margin-bottom: 28px;
+  color: #252525;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.delivery-details form {
+  display: grid;
+  gap: 8px;
+}
+
+.delivery-details label {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+}
+
+.delivery-name-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.delivery-details input {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #d8d8d8;
+  border-radius: 3px;
+  color: #252525;
+  font: inherit;
+  font-size: 12px;
+}
+
+.delivery-details input:focus-visible {
+  border-color: tomato;
+  outline: 2px solid #ff634733;
+}
+
+.order-summary {
+  padding: 2px 0 0;
+}
+
+.order-summary h2 {
+  margin-bottom: 10px;
+  color: #252525;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.order-summary-totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #555;
+  font-size: 12px;
+}
+
+.order-summary-totals {
+  display: grid;
+  gap: 0;
+}
+
+.order-summary-total {
+  padding-top: 6px;
+  color: #252525 !important;
+  font-size: 12px !important;
+}
+
+.place-order-submit {
+  min-width: 160px;
+  min-height: 38px;
+  margin-top: 28px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 3px;
+  background: tomato;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.place-order-submit:hover {
+  background: #e8533b;
+}
+
+.place-order-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.place-order-error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: #fff0f0;
+  color: #c0392b;
+  font-size: 12px;
+  border: 1px solid #fcd0d0;
+}
+
+.place-order-cod-note {
+  margin-top: 8px;
+  color: #888;
+  font-size: 11px;
+  text-align: center;
+}
+
+.place-order-payment {
+  display: grid;
+  gap: 7px;
+  margin: 22px 0 0;
+  padding: 14px;
+  border: 1px solid #e6e2df;
+  border-radius: 4px;
+}
+
+.place-order-payment legend {
+  padding: 0 5px;
+  color: #444;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.place-order-payment label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #333;
+  font-size: 13px;
+}
+
+.place-order-payment input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: tomato;
+}
+
+.place-order-payment small {
+  padding-left: 24px;
+  color: #777;
+  font-size: 11px;
+}
+
+.order-confirmation-backdrop {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #00000066;
+}
+
+.order-confirmation-dialog {
+  width: min(100%, 430px);
+  padding: 26px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 18px 55px #00000030;
+}
+
+.order-confirmation-dialog h2 {
+  margin: 0 0 12px;
+  color: #252525;
+  font-size: 21px;
+}
+
+.order-confirmation-dialog > p {
+  margin: 0 0 16px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.order-confirmation-payment {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.order-confirmation-note {
+  padding-top: 12px;
+  color: #777 !important;
+  font-size: 12px !important;
+}
+
+.order-confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.order-confirmation-actions button {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.order-confirmation-actions .order-confirmation-submit {
+  border-color: tomato;
+  background: tomato;
+  color: #fff;
+}
+
+.order-confirmation-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.place-order-empty,
+.place-order-confirmation {
+  padding: 36px 0;
+}
+
+.place-order-confirmation {
+  display: flex;
+  width: min(100%, 620px);
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto 0;
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid #e8ece8;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 48px #243a2d0d;
+  text-align: center;
+}
+
+.confirmation-success-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 7px solid #edf8ef;
+  border-radius: 50%;
+  background: #e2f3e5;
+  color: #27854a;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.confirmation-eyebrow {
+  margin: 20px 0 7px;
+  color: #328153;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.place-order-confirmation h1 {
+  margin: 0;
+  color: #202820;
+  font-size: clamp(22px, 4vw, 29px);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.place-order-confirmation .confirmation-description {
+  margin: 9px 0 23px;
+  color: #68716a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.confirmation-details {
+  width: 100%;
+  padding: 4px 16px;
+  border: 1px solid #e9ede9;
+  border-radius: 10px;
+  background: #fbfcfb;
+  text-align: left;
+}
+
+.confirmation-detail-row {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #e9ede9;
+  color: #6c746e;
+  font-size: 13px;
+}
+
+.confirmation-detail-row:last-child {
+  border-bottom: 0;
+}
+
+.confirmation-detail-row strong {
+  color: #292f2b;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.confirmation-detail-row .confirmation-order-id {
+  max-width: 62%;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.confirmation-payment-method {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.confirmation-payment-method span {
+  color: #328153;
+  font-size: 9px;
+}
+
+.place-order-confirmation .confirmation-payment-note {
+  margin: 13px 0 0;
+  color: #79817b;
+  font-size: 12px;
+}
+
+.confirmation-actions {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.confirmation-actions a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 1px solid #e1e6e1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.confirmation-actions .confirmation-primary-action {
+  border-color: #e95f43;
+  background: #e95f43;
+  color: #fff;
+}
+
+.confirmation-actions .confirmation-primary-action:hover {
+  border-color: #d94f34;
+  background: #d94f34;
+}
+
+.confirmation-actions .confirmation-secondary-action {
+  background: #fff;
+  color: #424a44;
+}
+
+.confirmation-actions .confirmation-secondary-action:hover {
+  border-color: #cbd6cc;
+  background: #f7faf7;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.place-order-empty p,
+.place-order-confirmation > p {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.place-order-empty a,
+.place-order-confirmation > a {
+  color: tomato;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .place-order-confirmation {
+    margin-top: 4px;
+    padding: 26px 18px;
+    border-radius: 12px;
+  }
+
+  .confirmation-detail-row {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 0;
+  }
+
+  .confirmation-detail-row strong {
+    text-align: left;
+  }
+
+  .confirmation-detail-row .confirmation-order-id {
+    max-width: 100%;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+}
+
+@container order-page (max-width: 680px) {
+  .place-order-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .order-summary {
+    width: 100%;
+  }
+}
+
+@container order-page (max-width: 420px) {
+  .delivery-name-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .place-order {
+    padding: 32px 0 56px;
+  }
+
+  .delivery-name-fields {
+    gap: 8px;
+  }
+}

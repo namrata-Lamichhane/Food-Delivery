@@ -15,10 +15,12 @@ const App = () => {
   const { token, loading } = useContext(StoreContext)
   const isPublicLanding = pathname === '/' && !token
   const isSignedInHome = pathname === '/' && Boolean(token)
+  const isSignedInMenu = pathname === '/menu' && Boolean(token)
   const appClassName = [
     'app',
     isPublicLanding && 'app--public-landing',
     isSignedInHome && 'app--signed-in-home',
+    isSignedInMenu && 'app--signed-in-menu',
   ].filter(Boolean).join(' ')
 
   useEffect(() => {

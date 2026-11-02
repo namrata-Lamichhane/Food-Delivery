@@ -79,6 +79,18 @@ a{
   --food-shadow: 0 12px 28px #25252516;
 }
 
+.app--signed-in-menu {
+  width: 80%;
+  --food-ink: #252525;
+  --food-muted: #6b6967;
+  --food-red: tomato;
+  --food-red-dark: #e8533b;
+  --food-line: #e6e6e6;
+  --food-paper: #fff;
+  --food-paper-deep: #f5f3f0;
+  --food-shadow: 0 12px 28px #25252516;
+}
+
 .app--signed-in-home .explore-menu h1,
 .app--signed-in-home .food-display h2,
 .app--signed-in-home .app-download h2 {
@@ -107,7 +119,8 @@ a{
   background-color: #e2e2e2;
 }
 
-.app--signed-in-home .food-item {
+.app--signed-in-home .food-item,
+.app--signed-in-menu .food-item {
   border-color: #f0efed;
   border-radius: 17px;
   background: #fff;
@@ -115,55 +128,68 @@ a{
   animation-duration: 3s;
 }
 
-.app--signed-in-home .food-item:hover {
+.app--signed-in-home .food-item:hover,
+.app--signed-in-menu .food-item:hover {
   box-shadow: 0 12px 28px #25252516;
 }
 
-.app--signed-in-home .food-item-image-container {
+.app--signed-in-home .food-item-image-container,
+.app--signed-in-menu .food-item-image-container {
   background: #f5f3f0;
 }
 
 .app--signed-in-home .food-item-add,
-.app--signed-in-home .food-item-counter {
+.app--signed-in-home .food-item-counter,
+.app--signed-in-menu .food-item-add,
+.app--signed-in-menu .food-item-counter {
   border-color: #f0efed;
   border-radius: 50%;
   background: #fff;
 }
 
-.app--signed-in-home .food-item-add {
+.app--signed-in-home .food-item-add,
+.app--signed-in-menu .food-item-add {
   color: #393633;
 }
 
-.app--signed-in-home .food-item-add:hover {
+.app--signed-in-home .food-item-add:hover,
+.app--signed-in-menu .food-item-add:hover {
   border-color: tomato;
   background: tomato;
   color: #fff;
 }
 
-.app--signed-in-home .food-item-counter button {
+.app--signed-in-home .food-item-counter button,
+.app--signed-in-menu .food-item-counter button {
   border-radius: 50%;
 }
 
-.app--signed-in-home .food-item-counter-remove {
+.app--signed-in-home .food-item-counter-remove,
+.app--signed-in-menu .food-item-counter-remove {
   background: #ffe4e4;
   color: #d65b5b;
 }
 
-.app--signed-in-home .food-item-counter-add {
+.app--signed-in-home .food-item-counter-add,
+.app--signed-in-menu .food-item-counter-add {
   background: #d8f5dc;
   color: #399c4b;
 }
 
 .app--signed-in-home .food-item-name-rating h3,
-.app--signed-in-home .food-item-counter span {
+.app--signed-in-home .food-item-counter span,
+.app--signed-in-menu .food-item-name-rating h3,
+.app--signed-in-menu .food-item-counter span {
   color: #252525;
 }
 
-.app--signed-in-home .food-item-description {
+.app--signed-in-home .food-item-description,
+.app--signed-in-menu .food-item-description {
   color: #6b6967;
 }
 
-.app--signed-in-home .food-item-price {
+.app--signed-in-home .food-item-price,
+.app--signed-in-menu .food-item-price {
   color: #b95742;
 }
 

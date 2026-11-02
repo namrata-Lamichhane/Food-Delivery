@@ -71,7 +71,7 @@
 ## 4. Component Design Specifications
 
 ### 4.1 Navigation (`frontend/src/components/Navbar/`)
-- Brand logo on left, centered hash-navigation links (`Home`, `Menu`, `Mobile app`, `Contact us`).
+- Brand logo on left, centered hash-navigation links (`Home`, `Menu`, `Contact us`).
 - Right actions: Search icon, Cart button with conditional item indicator dot (`.dot`), and Auth state.
 - **Logged out:** "Sign in" pill button (`border: 1px solid tomato`, rounded 50px).
 - **Logged in:** Avatar image (`profile_image.png`) with click-toggled dropdown containing "Orders" (`/orders`) and "Logout".

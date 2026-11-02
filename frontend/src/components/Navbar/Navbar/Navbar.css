@@ -121,13 +121,13 @@
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  min-width: 140px;
+  min-width: 176px;
   list-style: none;
-  padding: 6px 0;
+  padding: 8px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 8px 28px #00000022;
-  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px #1f29371f, 0 2px 8px #1f29370d;
+  border: 1px solid #e8eaf0;
   z-index: 200;
   animation: dropIn 140ms ease;
 }
@@ -140,18 +140,20 @@
 .navbar-logout-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 10px;
   width: 100%;
-  padding: 10px 16px;
+  min-height: 42px;
+  padding: 9px 12px;
   border: 0;
-  border-radius: 0;
-  background: none;
-  color: #333;
+  border-radius: 8px;
+  background: transparent;
+  color: #b42318;
   font-size: 14px;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
-  transition: background 120ms;
+  transition: background-color 140ms ease, color 140ms ease;
 }
 
 .navbar-profile-link {
@@ -179,16 +181,21 @@
 }
 
 .navbar-logout-btn:hover {
-  background: #fff4f2;
-  color: tomato;
+  background: #fef3f2;
+  color: #912018;
   border-color: transparent;
 }
 
+.navbar .navbar-logout-btn:focus-visible {
+  outline: 2px solid #f04438;
+  outline-offset: 2px;
+}
+
 .navbar-logout-btn img {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   object-fit: contain;
-  opacity: 0.55;
+  opacity: 0.8;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */

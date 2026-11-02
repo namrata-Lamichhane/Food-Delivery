@@ -2,17 +2,17 @@
   position: fixed;
   z-index: 1000;
   top: 0;
-  left: 50%;
-  width: min(1200px, calc(100% - 64px));
+  left: 0;
+  width: 100%;
   min-height: 76px;
-  padding: 10px 20px;
+  padding: 10px max(32px, calc((100% - 1200px) / 2));
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  transform: translateX(-50%);
   background: #fff;
   border-bottom: 1px solid var(--food-line);
+  box-shadow: 0 4px 16px #322c280d;
   border-radius: 0;
 }
 
@@ -267,9 +267,8 @@
 
 @media (max-width: 750px) {
   .navbar {
-    width: calc(100% - 40px);
     min-height: 68px;
-    padding: 8px 0;
+    padding: 8px 20px;
   }
 
   .navbar-menu {

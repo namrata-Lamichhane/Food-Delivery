@@ -1007,45 +1007,6 @@
   margin: 0;
 }
 
-.app--public-landing > .navbar {
-  position: absolute;
-  z-index: 5;
-  top: 0;
-  left: 50%;
-  width: min(1200px, calc(100% - 64px));
-  min-height: 82px;
-  padding: 12px 0;
-  transform: translateX(-50%);
-  border-bottom: 1px solid #ffffff3b;
-  border-radius: 0;
-  background: transparent;
-  color: #fff;
-}
-
-.app--public-landing .navbar .logo {
-  width: 112px;
-  filter: brightness(0) invert(1);
-}
-
-.app--public-landing .welcome-nav {
-  color: #ffffffdf;
-}
-
-.app--public-landing .welcome-nav a:hover {
-  color: #fff;
-}
-
-.app--public-landing .navbar button {
-  border-color: #fff;
-  background: #fff;
-  color: #35261f;
-}
-
-.app--public-landing .navbar button:hover {
-  border-color: #ffe9df;
-  background: #ffe9df;
-}
-
 .welcome-landing {
   width: 100%;
   margin: 0;
@@ -1219,15 +1180,6 @@
 }
 
 @media (max-width: 750px) {
-  .app--public-landing > .navbar {
-    width: calc(100% - 40px);
-    min-height: 72px;
-  }
-
-  .app--public-landing .navbar .logo {
-    width: 96px;
-  }
-
   .welcome-hero {
     min-height: 100vh;
     min-height: 100svh;

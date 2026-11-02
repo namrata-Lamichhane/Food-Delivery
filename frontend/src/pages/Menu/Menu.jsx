@@ -8,11 +8,9 @@ const Menu = () => {
 
   return (
     <main className='menu-page'>
-      <section className='menu-page-intro' aria-labelledby='menu-page-title'>
-        <span className='menu-page-eyebrow'>FRESH FROM OUR KITCHEN</span>
+      <header className='menu-page-header' aria-labelledby='menu-page-title'>
         <h1 id='menu-page-title'>Our Menu</h1>
-        <p>Find something delicious, made fresh and ready to enjoy.</p>
-      </section>
+      </header>
       <ExploreMenu category={category} setCategory={setCategory} />
       <FoodDisplay category={category} title='All the good stuff' />
     </main>

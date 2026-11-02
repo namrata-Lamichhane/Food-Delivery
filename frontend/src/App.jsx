@@ -7,6 +7,7 @@ import Cart from './pages/Cart/Cart'
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder'
 import MyOrders from './pages/MyOrders/MyOrders'
 import Menu from './pages/Menu/Menu'
+import Contact from './pages/Contact/Contact'
 import Footer from './components/Footer/Footer'
 import { StoreContext } from './context/StoreContext'
 
@@ -49,6 +50,7 @@ const App = () => {
             }
           />
           <Route path='/menu' element={<Menu />} />
+          <Route path='/contact' element={<Contact />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/order' element={<PlaceOrder />} />
           <Route path='/orders' element={<MyOrders />} />

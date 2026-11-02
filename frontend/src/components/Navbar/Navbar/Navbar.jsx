@@ -12,17 +12,17 @@ const Navbar = ({ publicLanding = false }) => {
     const dropdownRef = useRef(null)
 
     const { token, setToken, cartItems, clearCart } = useContext(StoreContext)
-    const { pathname, hash } = useLocation()
+    const { pathname } = useLocation()
     const showToast = useToast()
     const activeMenu = pathname === '/menu'
         ? 'menu'
+        : pathname === '/contact'
+            ? 'contact-us'
         : pathname === '/orders' || pathname === '/myorders'
             ? 'orders'
-            : pathname === '/' && hash === '#footer'
-                ? 'contact-us'
-                : pathname === '/'
-                    ? 'home'
-                    : ''
+            : pathname === '/'
+                ? 'home'
+                : ''
 
     // Cart dot only when at least one item is in the cart
     const hasCartItems = Object.values(cartItems).some((qty) => qty > 0)
@@ -59,6 +59,7 @@ const Navbar = ({ publicLanding = false }) => {
                         <Link to='/#welcome-categories'>Categories</Link>
                         <Link to='/#welcome-featured'>Popular dishes</Link>
                         <Link to='/#welcome-how'>How it works</Link>
+                        <Link to='/contact'>Contact us</Link>
                     </nav>
                 ) : <nav aria-label='Main navigation'>
                     <ul className='navbar-menu'>
@@ -88,7 +89,7 @@ const Navbar = ({ publicLanding = false }) => {
                         </li>
                         <li>
                             <Link
-                                to='/#footer'
+                                to='/contact'
                                 className={activeMenu === 'contact-us' ? 'active' : ''}
                             >
                                 Contact us

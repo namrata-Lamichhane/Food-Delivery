@@ -1535,30 +1535,6 @@
   font-weight: 500;
 }
 
-.app--public-landing + .footer {
-  margin-top: 0;
-  background: #efe3d2;
-  color: #372b27;
-}
-
-.app--public-landing + .footer .footer-about p,
-.app--public-landing + .footer .footer-contact p,
-.app--public-landing + .footer .footer-links a,
-.app--public-landing + .footer .footer-links span,
-.app--public-landing + .footer .footer-contact a {
-  color: #71635b;
-}
-
-.app--public-landing + .footer .footer-links h2,
-.app--public-landing + .footer .footer-contact h2 {
-  color: #372b27;
-}
-
-.app--public-landing + .footer .footer-bottom {
-  border-color: #d3c4b1;
-  color: #71635b;
-}
-
 @keyframes welcome-shape-sway {
   from { transform: translate(-47%, -50%) rotate(-8deg) scale(0.98); }
   to { transform: translate(-50%, -50%) rotate(5deg) scale(1.02); }

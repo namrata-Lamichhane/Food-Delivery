@@ -3,7 +3,7 @@ import './FoodDisplay.css'
 import { StoreContext } from '../../context/StoreContext'
 import rating_starts from '../../assets/rating_starts.png'
 
-const FoodDisplay = ({ category }) => {
+const FoodDisplay = ({ category, title = 'Top dishes near you' }) => {
   const { food_list, cartItems, addToCart, updateCartQuantity } =
     useContext(StoreContext)
   const displayedFood = food_list.filter(
@@ -12,7 +12,7 @@ const FoodDisplay = ({ category }) => {
 
   return (
     <div className='food-display' id='food-display'>
-      <h2>Top dishes near you</h2>
+      <h2>{title}</h2>
       <div className='food-display-list'>
         {displayedFood.map((item) => (
           <article className='food-item' key={`${category}-${item._id}`}>

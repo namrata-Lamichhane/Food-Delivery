@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
 import { assets } from '../../../assets/assets'
 import { StoreContext } from '../../../context/StoreContext'
@@ -7,13 +7,22 @@ import LoginPopup from '../../LoginPopup/LoginPopup'
 import { useToast } from '../../../context/ToastContext'
 
 const Navbar = ({ publicLanding = false }) => {
-    const [menu, setMenu] = useState('home')
     const [showLogin, setShowLogin] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const dropdownRef = useRef(null)
 
     const { token, setToken, cartItems, clearCart } = useContext(StoreContext)
+    const { pathname, hash } = useLocation()
     const showToast = useToast()
+    const activeMenu = pathname === '/menu'
+        ? 'menu'
+        : pathname === '/orders' || pathname === '/myorders'
+            ? 'orders'
+            : pathname === '/' && hash === '#footer'
+                ? 'contact-us'
+                : pathname === '/'
+                    ? 'home'
+                    : ''
 
     // Cart dot only when at least one item is in the cart
     const hasCartItems = Object.values(cartItems).some((qty) => qty > 0)
@@ -41,7 +50,7 @@ const Navbar = ({ publicLanding = false }) => {
         <>
             {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
             <header className='navbar'>
-                <Link to='/' aria-label='Food Del home' onClick={() => setMenu('home')}>
+                <Link to='/' aria-label='Food Del home'>
                     <img src={assets.logo} alt='Food Del' className='logo' />
                 </Link>
 
@@ -56,17 +65,15 @@ const Navbar = ({ publicLanding = false }) => {
                         <li>
                             <Link
                                 to='/'
-                                className={menu === 'home' ? 'active' : ''}
-                                onClick={() => setMenu('home')}
+                                className={activeMenu === 'home' ? 'active' : ''}
                             >
                                 Home
                             </Link>
                         </li>
                         <li>
                             <Link
-                                to='/#explore-menu'
-                                className={menu === 'menu' ? 'active' : ''}
-                                onClick={() => setMenu('menu')}
+                                to='/menu'
+                                className={activeMenu === 'menu' ? 'active' : ''}
                             >
                                 Menu
                             </Link>
@@ -74,8 +81,7 @@ const Navbar = ({ publicLanding = false }) => {
                         <li>
                             <Link
                                 to='/orders'
-                                className={menu === 'orders' ? 'active' : ''}
-                                onClick={() => setMenu('orders')}
+                                className={activeMenu === 'orders' ? 'active' : ''}
                             >
                                 Orders
                             </Link>
@@ -83,8 +89,7 @@ const Navbar = ({ publicLanding = false }) => {
                         <li>
                             <Link
                                 to='/#footer'
-                                className={menu === 'contact-us' ? 'active' : ''}
-                                onClick={() => setMenu('contact-us')}
+                                className={activeMenu === 'contact-us' ? 'active' : ''}
                             >
                                 Contact us
                             </Link>

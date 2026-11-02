@@ -6,6 +6,7 @@ import Welcome from './pages/Welcome/Welcome'
 import Cart from './pages/Cart/Cart'
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder'
 import MyOrders from './pages/MyOrders/MyOrders'
+import Menu from './pages/Menu/Menu'
 import Footer from './components/Footer/Footer'
 import { StoreContext } from './context/StoreContext'
 
@@ -13,18 +14,24 @@ const App = () => {
   const { pathname, hash } = useLocation()
   const { token, loading } = useContext(StoreContext)
   const isPublicLanding = pathname === '/' && !token
+  const isSignedInHome = pathname === '/' && Boolean(token)
+  const appClassName = [
+    'app',
+    isPublicLanding && 'app--public-landing',
+    isSignedInHome && 'app--signed-in-home',
+  ].filter(Boolean).join(' ')
 
   useEffect(() => {
     if (hash) {
       document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView()
-    } else if (pathname === '/') {
+    } else {
       window.scrollTo(0, 0)
     }
   }, [pathname, hash])
 
   return (
     <>
-      <div className={`app${isPublicLanding ? ' app--public-landing' : ''}`}>
+      <div className={appClassName}>
         <Navbar publicLanding={isPublicLanding} />
         <Routes>
           <Route
@@ -39,6 +46,7 @@ const App = () => {
               )
             }
           />
+          <Route path='/menu' element={<Menu />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/order' element={<PlaceOrder />} />
           <Route path='/orders' element={<MyOrders />} />

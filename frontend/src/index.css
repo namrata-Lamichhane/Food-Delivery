@@ -2,7 +2,7 @@
 
 :root {
   color-scheme: light;
-  --food-cream: #fbf3e7;
+  --food-cream: #fff;
   --food-paper: #fffaf1;
   --food-paper-deep: #f5e9d8;
   --food-ink: #322c28;
@@ -53,5 +53,150 @@ a{
 @media (max-width: 600px) {
   .app {
     width: calc(100% - 40px);
+  }
+}
+
+.app--signed-in-home {
+  width: 80%;
+  --food-ink: #252525;
+  --food-muted: #6b6967;
+  --food-red: tomato;
+  --food-red-dark: #e8533b;
+  --food-line: #e6e6e6;
+  --food-paper: #fff;
+  --food-paper-deep: #f5f3f0;
+  --food-shadow: 0 12px 28px #25252516;
+}
+
+.app--signed-in-home > .navbar {
+  min-height: 64px;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.app--signed-in-home .navbar .logo {
+  width: 92px;
+}
+
+.app--signed-in-home .navbar-menu {
+  color: #49557e;
+}
+
+.app--signed-in-home .navbar button {
+  border-color: #ff6347;
+  background: transparent;
+  color: #49557e;
+}
+
+.app--signed-in-home .navbar button:hover {
+  border-color: #f45136;
+  background: #fff4f2;
+}
+
+.app--signed-in-home .navbar .active {
+  border-bottom-color: #49557e;
+}
+
+.app--signed-in-home .navbar-menu a:hover {
+  color: #49557e;
+}
+
+.app--signed-in-home .explore-menu h1,
+.app--signed-in-home .food-display h2,
+.app--signed-in-home .app-download h2 {
+  color: #252525;
+  font-family: Outfit, sans-serif;
+}
+
+.app--signed-in-home .explore-menu-text {
+  color: #666;
+}
+
+.app--signed-in-home .explore-menu-list-item span {
+  color: #747474;
+}
+
+.app--signed-in-home .explore-menu-list-item .active {
+  border: 4px solid tomato;
+  padding: 2px;
+}
+
+.app--signed-in-home .explore-menu-list-item .active + span {
+  color: #747474;
+}
+
+.app--signed-in-home .explore-menu hr {
+  background-color: #e2e2e2;
+}
+
+.app--signed-in-home .food-item {
+  border-color: #f0efed;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 3px 14px #2525250a;
+  animation-duration: 3s;
+}
+
+.app--signed-in-home .food-item:hover {
+  box-shadow: 0 12px 28px #25252516;
+}
+
+.app--signed-in-home .food-item-image-container {
+  background: #f5f3f0;
+}
+
+.app--signed-in-home .food-item-add,
+.app--signed-in-home .food-item-counter {
+  border-color: #f0efed;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.app--signed-in-home .food-item-add {
+  color: #393633;
+}
+
+.app--signed-in-home .food-item-add:hover {
+  border-color: tomato;
+  background: tomato;
+  color: #fff;
+}
+
+.app--signed-in-home .food-item-counter button {
+  border-radius: 50%;
+}
+
+.app--signed-in-home .food-item-counter-remove {
+  background: #ffe4e4;
+  color: #d65b5b;
+}
+
+.app--signed-in-home .food-item-counter-add {
+  background: #d8f5dc;
+  color: #399c4b;
+}
+
+.app--signed-in-home .food-item-name-rating h3,
+.app--signed-in-home .food-item-counter span {
+  color: #252525;
+}
+
+.app--signed-in-home .food-item-description {
+  color: #6b6967;
+}
+
+.app--signed-in-home .food-item-price {
+  color: #b95742;
+}
+
+.app--signed-in-home .app-download h2 {
+  color: #171717;
+}
+
+@media (max-width: 1050px) {
+  .app--signed-in-home .navbar .logo {
+    width: 140px;
   }
 }

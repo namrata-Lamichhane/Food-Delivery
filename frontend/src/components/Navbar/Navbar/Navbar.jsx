@@ -67,6 +67,15 @@ const Navbar = () => {
                         </li>
                         <li>
                             <Link
+                                to='/orders'
+                                className={menu === 'orders' ? 'active' : ''}
+                                onClick={() => setMenu('orders')}
+                            >
+                                Orders
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
                                 to='/#footer'
                                 className={menu === 'contact-us' ? 'active' : ''}
                                 onClick={() => setMenu('contact-us')}
@@ -112,17 +121,6 @@ const Navbar = () => {
                                     role='menu'
                                 >
                                     <li role='none'>
-                                        <Link
-                                            to='/orders'
-                                            role='menuitem'
-                                            className='navbar-profile-link'
-                                            onClick={() => setDropdownOpen(false)}
-                                        >
-                                            <span aria-hidden='true'>▤</span>
-                                            Orders
-                                        </Link>
-                                    </li>
-                                    <li role='none'>
                                         <button
                                             type='button'
                                             role='menuitem'
@@ -134,7 +132,7 @@ const Navbar = () => {
                                                 alt=''
                                                 aria-hidden='true'
                                             />
-                                            Logout
+                                            Sign out
                                         </button>
                                     </li>
                                 </ul>

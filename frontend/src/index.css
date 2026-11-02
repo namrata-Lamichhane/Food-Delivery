@@ -32,6 +32,7 @@ a{
 .app{
   width: min(1200px, calc(100% - 64px));
   margin: auto;
+  padding-top: 76px;
 }
 @keyframes fadeIn {
   0%{
@@ -56,6 +57,16 @@ a{
   }
 }
 
+@media (max-width: 750px) {
+  .app {
+    padding-top: 68px;
+  }
+}
+
+.app--public-landing {
+  padding-top: 0;
+}
+
 .app--signed-in-home {
   width: 80%;
   --food-ink: #252525;
@@ -66,41 +77,6 @@ a{
   --food-paper: #fff;
   --food-paper-deep: #f5f3f0;
   --food-shadow: 0 12px 28px #25252516;
-}
-
-.app--signed-in-home > .navbar {
-  min-height: 64px;
-  padding: 8px 20px;
-  border: 0;
-  border-radius: 12px;
-  background: #fff;
-}
-
-.app--signed-in-home .navbar .logo {
-  width: 92px;
-}
-
-.app--signed-in-home .navbar-menu {
-  color: #49557e;
-}
-
-.app--signed-in-home .navbar button {
-  border-color: #ff6347;
-  background: transparent;
-  color: #49557e;
-}
-
-.app--signed-in-home .navbar button:hover {
-  border-color: #f45136;
-  background: #fff4f2;
-}
-
-.app--signed-in-home .navbar .active {
-  border-bottom-color: #49557e;
-}
-
-.app--signed-in-home .navbar-menu a:hover {
-  color: #49557e;
 }
 
 .app--signed-in-home .explore-menu h1,
@@ -193,10 +169,4 @@ a{
 
 .app--signed-in-home .app-download h2 {
   color: #171717;
-}
-
-@media (max-width: 1050px) {
-  .app--signed-in-home .navbar .logo {
-    width: 140px;
-  }
 }

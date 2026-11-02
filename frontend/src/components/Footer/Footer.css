@@ -1,6 +1,7 @@
 .footer {
   position: relative;
   margin-top: 88px;
+  scroll-margin-top: 92px;
   padding: 68px 24px 24px;
   overflow: hidden;
   background:

@@ -1189,6 +1189,7 @@
   width: min(1200px, calc(100% - 64px));
   margin-right: auto;
   margin-left: auto;
+  scroll-margin-top: 92px;
 }
 
 .welcome-categories {
@@ -1254,37 +1255,6 @@
   .welcome-scroll-arrow {
     animation: none;
   }
-}
-
-.app--public-landing > .navbar {
-  min-height: 76px;
-  padding: 10px 0;
-  border-bottom-color: #6f30201c;
-  color: #372b27;
-}
-
-.app--public-landing .navbar .logo {
-  width: 106px;
-  filter: none;
-}
-
-.app--public-landing .welcome-nav {
-  color: #594944;
-}
-
-.app--public-landing .welcome-nav a:hover {
-  color: #b44848;
-}
-
-.app--public-landing .navbar button {
-  border-color: #b44848;
-  background: #b44848;
-  color: #fff;
-}
-
-.app--public-landing .navbar button:hover {
-  border-color: #963b3b;
-  background: #963b3b;
 }
 
 .welcome-landing {
@@ -1541,14 +1511,6 @@
 }
 
 @media (max-width: 750px) {
-  .app--public-landing > .navbar {
-    min-height: 68px;
-  }
-
-  .app--public-landing .navbar .logo {
-    width: 96px;
-  }
-
   .welcome-hero {
     width: calc(100% - 40px);
     min-height: 0;

@@ -1,16 +1,17 @@
 .navbar {
-  min-height: 64px;
-  padding: 8px 20px;
+  min-height: 76px;
+  padding: 10px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  background: #fff;
-  border-radius: 12px;
+  background: transparent;
+  border-bottom: 1px solid var(--food-line);
+  border-radius: 0;
 }
 
 .navbar .logo {
-  width: 92px;
+  width: 106px;
   flex-shrink: 0;
 }
 
@@ -18,7 +19,7 @@
   display: flex;
   list-style: none;
   gap: 26px;
-  color: #49557e;
+  color: var(--food-ink);
   font-size: 16px;
   font-weight: 500;
 }
@@ -27,7 +28,7 @@
   display: flex;
   align-items: center;
   gap: clamp(14px, 2.4vw, 30px);
-  color: #615950;
+  color: var(--food-muted);
   font-size: 14px;
   font-weight: 500;
 }
@@ -38,11 +39,11 @@
 }
 
 .welcome-nav a:hover {
-  color: #d95840;
+  color: var(--food-red);
 }
 
 .welcome-nav a:focus-visible {
-  outline: 2px solid tomato;
+  outline: 2px solid var(--food-red);
   outline-offset: 4px;
 }
 
@@ -73,14 +74,14 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: tomato;
+  background-color: var(--food-red);
 }
 
 .navbar button {
   background: transparent;
   font-size: 15px;
-  color: #49557e;
-  border: 1px solid #ff6347;
+  color: var(--food-red);
+  border: 1px solid var(--food-red);
   padding: 9px 24px;
   border-radius: 50px;
   cursor: pointer;
@@ -88,12 +89,12 @@
 }
 
 .navbar button:hover {
-  background-color: #fff4f2;
-  border-color: #f45136;
+  background-color: #f5e9d8;
+  border-color: var(--food-red-dark);
 }
 
 .navbar .active {
-  border-bottom: 2px solid #49557e;
+  border-bottom: 2px solid var(--food-red);
 }
 
 .navbar li {
@@ -120,7 +121,7 @@
 }
 
 .navbar-profile-btn:hover {
-  background: #f5f1f0;
+  background: var(--food-paper-deep);
   border-color: transparent;
 }
 
@@ -134,7 +135,7 @@
 
 .navbar-profile-arrow {
   font-size: 9px;
-  color: #888;
+  color: var(--food-muted);
   line-height: 1;
   user-select: none;
 }
@@ -147,10 +148,10 @@
   min-width: 176px;
   list-style: none;
   padding: 8px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 12px 32px #1f29371f, 0 2px 8px #1f29370d;
-  border: 1px solid #e8eaf0;
+  background: var(--food-paper);
+  border-radius: 8px;
+  box-shadow: var(--food-shadow);
+  border: 1px solid var(--food-line);
   z-index: 200;
   animation: dropIn 140ms ease;
 }
@@ -192,13 +193,13 @@
 }
 
 .navbar-profile-link:hover {
-  background: #fff4f2;
-  color: tomato;
+  background: var(--food-paper-deep);
+  color: var(--food-red);
 }
 
 .navbar-profile-link span {
   width: 16px;
-  color: #a76e57;
+  color: var(--food-red);
   font-size: 16px;
   text-align: center;
 }
@@ -210,7 +211,7 @@
 }
 
 .navbar .navbar-logout-btn:focus-visible {
-  outline: 2px solid #f04438;
+  outline: 2px solid var(--food-red);
   outline-offset: 2px;
 }
 
@@ -224,9 +225,6 @@
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 
 @media (max-width: 1050px) {
-  .navbar .logo {
-    width: 140px;
-  }
   .navbar-menu {
     gap: 20px;
     font-size: 17px;
@@ -244,9 +242,6 @@
 }
 
 @media (max-width: 900px) {
-  .navbar .logo {
-    width: 140px;
-  }
   .navbar-menu {
     gap: 15px;
     font-size: 16px;
@@ -272,4 +267,12 @@
   .welcome-nav {
     display: none;
   }
+}
+
+.navbar-menu a {
+  transition: color 160ms ease;
+}
+
+.navbar-menu a:hover {
+  color: var(--food-red);
 }

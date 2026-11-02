@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+:root {
+  color-scheme: light;
+  --food-cream: #fbf3e7;
+  --food-paper: #fffaf1;
+  --food-paper-deep: #f5e9d8;
+  --food-ink: #322c28;
+  --food-muted: #71635b;
+  --food-red: #b44848;
+  --food-red-dark: #963b3b;
+  --food-line: #e8ddcb;
+  --food-shadow: 0 12px 32px #47251c12;
+}
+
 *{
   padding: 0;
   margin:0;
@@ -9,13 +22,15 @@
 }
 body{
   min-height:100vh;
+  background: var(--food-cream);
+  color: var(--food-ink);
 }
 a{
   text-decoration:none;
   color: inherit;
 }
 .app{
-  width: 80%;
+  width: min(1200px, calc(100% - 64px));
   margin: auto;
 }
 @keyframes fadeIn {
@@ -32,5 +47,11 @@ a{
   *::before,
   *::after {
     scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .app {
+    width: calc(100% - 40px);
   }
 }

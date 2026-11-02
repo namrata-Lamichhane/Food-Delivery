@@ -5,15 +5,16 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: #00000090;
+  background: #261b17a6;
 }
 
 .login-popup-container {
   width: min(100%, 400px);
   padding: 28px;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 16px 48px #00000030;
+  border: 1px solid var(--food-line);
+  border-radius: 3px;
+  background: var(--food-paper);
+  box-shadow: 0 16px 48px #47251c30;
 }
 
 .login-popup-title {
@@ -24,7 +25,8 @@
 }
 
 .login-popup-title h2 {
-  color: #252525;
+  color: var(--food-ink);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 24px;
   font-weight: 600;
 }
@@ -36,8 +38,8 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #f5f3f0;
-  color: #393633;
+  background: var(--food-paper-deep);
+  color: var(--food-ink);
   cursor: pointer;
   font-size: 26px;
   line-height: 1;
@@ -51,7 +53,7 @@
 .login-popup-inputs label {
   display: grid;
   gap: 6px;
-  color: #494949;
+  color: var(--food-muted);
   font-size: 14px;
 }
 
@@ -59,22 +61,23 @@
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
-  border: 1px solid #d8d8d8;
-  border-radius: 6px;
+  border: 1px solid var(--food-line);
+  border-radius: 2px;
+  background: #fffdf9;
   font: inherit;
 }
 
 .login-popup-inputs input:focus-visible,
 .login-popup button:focus-visible {
-  outline: 2px solid tomato;
+  outline: 2px solid var(--food-red);
   outline-offset: 2px;
 }
 
 .login-popup-submit {
   min-height: 46px;
   border: 0;
-  border-radius: 6px;
-  background: tomato;
+  border-radius: 2px;
+  background: var(--food-red);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -82,7 +85,7 @@
 }
 
 .login-popup-toggle {
-  color: #666;
+  color: var(--food-muted);
   font-size: 14px;
   text-align: center;
 }
@@ -91,7 +94,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: tomato;
+  color: var(--food-red);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -100,10 +103,10 @@
 .login-popup-error {
   padding: 10px 12px;
   border-radius: 6px;
-  background: #fff0f0;
-  color: #c0392b;
+  background: #f9e9df;
+  color: var(--food-red-dark);
   font-size: 13px;
-  border: 1px solid #fcd0d0;
+  border: 1px solid #e6b9aa;
 }
 
 .login-popup-submit:disabled {

@@ -5,11 +5,13 @@
   gap: 30px;
   margin: 100px auto 80px;
   padding: 0 16px;
+  color: var(--food-ink);
   text-align: center;
 }
 
 .app-download h2 {
-  color: #171717;
+  color: var(--food-ink);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(28px, 3vw, 40px);
   font-weight: 500;
   line-height: 1.3;
@@ -36,7 +38,7 @@
 }
 
 .app-download-platforms a:focus-visible {
-  outline: 3px solid tomato;
+  outline: 3px solid var(--food-red);
   outline-offset: 5px;
 }
 

@@ -3,13 +3,15 @@
   min-height: 52vh;
   margin: 0 auto;
   padding: 46px 0 76px;
-  color: #242424;
+  color: var(--food-ink);
 }
 
 .my-orders h1 {
   margin: 0 0 24px;
-  font-size: 23px;
-  font-weight: 650;
+  color: var(--food-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 500;
 }
 
 .my-orders-list {
@@ -24,8 +26,9 @@
   gap: 16px;
   min-height: 86px;
   padding: 13px 18px;
-  border: 1px solid #bba99e;
-  background: #fff;
+  border: 1px solid var(--food-line);
+  background: var(--food-paper);
+  box-shadow: 0 3px 14px #47251c08;
 }
 
 .my-order-package {
@@ -53,7 +56,7 @@
 .my-order-items span {
   display: block;
   margin-top: 4px;
-  color: #858585;
+  color: var(--food-muted);
   font-size: 11px;
 }
 
@@ -88,42 +91,45 @@
 .my-order-track {
   min-height: 38px;
   padding: 0 12px;
-  border: 1px solid #f0d7d4;
-  border-radius: 4px;
-  background: #fff0ef;
-  color: #373737;
+  border: 1px solid #d9b3a5;
+  border-radius: 2px;
+  background: #f7e9dd;
+  color: var(--food-red-dark);
   font-size: 12px;
   cursor: pointer;
 }
 
 .my-order-track:hover {
-  background: #ffe4e1;
+  background: #f1dace;
 }
 
 .my-order-tracking-detail {
   grid-column: 2 / -1;
   margin: 0 0 2px;
   padding-top: 10px;
-  border-top: 1px solid #eee6e2;
-  color: #626262;
+  border-top: 1px solid var(--food-line);
+  color: var(--food-muted);
   font-size: 12px;
 }
 
 .my-orders-message {
   padding: 38px 24px;
-  border: 1px solid #e8dfda;
-  background: #fff;
+  border: 1px solid var(--food-line);
+  background: var(--food-paper);
   text-align: center;
 }
 
 .my-orders-message h2 {
   margin: 0 0 8px;
+  color: var(--food-ink);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 18px;
+  font-weight: 500;
 }
 
 .my-orders-message p {
   margin: 0;
-  color: #737373;
+  color: var(--food-muted);
   font-size: 14px;
 }
 
@@ -135,14 +141,14 @@
   margin-top: 18px;
   padding: 0 16px;
   border-radius: 4px;
-  background: tomato;
+  background: var(--food-red);
   color: #fff;
   font-size: 13px;
 }
 
 .my-orders-error {
-  border-color: #efc1b9;
-  color: #9c2c19;
+  border-color: #e6b9aa;
+  color: var(--food-red-dark);
 }
 
 @media (max-width: 850px) {

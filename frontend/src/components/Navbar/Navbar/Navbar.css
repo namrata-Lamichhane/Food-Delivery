@@ -23,6 +23,29 @@
   font-weight: 500;
 }
 
+.welcome-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 30px);
+  color: #615950;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.welcome-nav a {
+  padding: 8px 0;
+  transition: color 160ms ease;
+}
+
+.welcome-nav a:hover {
+  color: #d95840;
+}
+
+.welcome-nav a:focus-visible {
+  outline: 2px solid tomato;
+  outline-offset: 4px;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
@@ -243,6 +266,10 @@
 
 @media (max-width: 750px) {
   .navbar-menu {
+    display: none;
+  }
+
+  .welcome-nav {
     display: none;
   }
 }

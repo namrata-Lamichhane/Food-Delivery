@@ -6,7 +6,7 @@ import { StoreContext } from '../../../context/StoreContext'
 import LoginPopup from '../../LoginPopup/LoginPopup'
 import { useToast } from '../../../context/ToastContext'
 
-const Navbar = () => {
+const Navbar = ({ publicLanding = false }) => {
     const [menu, setMenu] = useState('home')
     const [showLogin, setShowLogin] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -45,7 +45,13 @@ const Navbar = () => {
                     <img src={assets.logo} alt='Food Del' className='logo' />
                 </Link>
 
-                <nav aria-label='Main navigation'>
+                {publicLanding ? (
+                    <nav className='welcome-nav' aria-label='Welcome page navigation'>
+                        <Link to='/#welcome-categories'>Categories</Link>
+                        <Link to='/#welcome-featured'>Popular dishes</Link>
+                        <Link to='/#welcome-how'>How it works</Link>
+                    </nav>
+                ) : <nav aria-label='Main navigation'>
                     <ul className='navbar-menu'>
                         <li>
                             <Link
@@ -84,15 +90,19 @@ const Navbar = () => {
                             </Link>
                         </li>
                     </ul>
-                </nav>
+                </nav>}
 
                 <div className='navbar-right'>
-                    <img src={assets.search_icon} alt='' aria-hidden='true' />
+                    {!publicLanding && (
+                        <>
+                            <img src={assets.search_icon} alt='' aria-hidden='true' />
 
-                    <Link to='/cart' className='navbar-search-icon' aria-label='Open cart'>
-                        <img src={assets.basket_icon} alt='' />
-                        {hasCartItems && <span className='dot' aria-hidden='true' />}
-                    </Link>
+                            <Link to='/cart' className='navbar-search-icon' aria-label='Open cart'>
+                                <img src={assets.basket_icon} alt='' />
+                                {hasCartItems && <span className='dot' aria-hidden='true' />}
+                            </Link>
+                        </>
+                    )}
 
                     {token ? (
                         /* ── Logged-in: profile icon + click-toggled dropdown ── */

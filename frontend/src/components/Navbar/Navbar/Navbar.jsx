@@ -9,6 +9,7 @@ import { useToast } from '../../../context/ToastContext'
 const Navbar = ({ publicLanding = false }) => {
     const [showLogin, setShowLogin] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const dropdownRef = useRef(null)
 
     const { token, setToken, cartItems, clearCart } = useContext(StoreContext)
@@ -45,6 +46,10 @@ const Navbar = ({ publicLanding = false }) => {
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
+
+    useEffect(() => {
+        setMobileMenuOpen(false)
+    }, [pathname, publicLanding])
 
     return (
         <>
@@ -97,6 +102,40 @@ const Navbar = ({ publicLanding = false }) => {
                         </li>
                     </ul>
                 </nav>}
+
+                <button
+                    className='navbar-menu-toggle'
+                    type='button'
+                    aria-label={mobileMenuOpen ? 'Close navigation' : 'Open navigation'}
+                    aria-expanded={mobileMenuOpen}
+                    aria-controls='mobile-navigation'
+                    onClick={() => setMobileMenuOpen((open) => !open)}
+                >
+                    <span aria-hidden='true' />
+                </button>
+
+                <nav
+                    className='mobile-navigation'
+                    id='mobile-navigation'
+                    aria-label='Mobile navigation'
+                    hidden={!mobileMenuOpen}
+                >
+                    {publicLanding ? (
+                        <>
+                            <Link to='/#welcome-categories' onClick={() => setMobileMenuOpen(false)}>Categories</Link>
+                            <Link to='/#welcome-featured' onClick={() => setMobileMenuOpen(false)}>Popular dishes</Link>
+                            <Link to='/#welcome-how' onClick={() => setMobileMenuOpen(false)}>How it works</Link>
+                            <Link to='/contact' onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to='/' onClick={() => setMobileMenuOpen(false)}>Home</Link>
+                            <Link to='/menu' onClick={() => setMobileMenuOpen(false)}>Menu</Link>
+                            <Link to='/orders' onClick={() => setMobileMenuOpen(false)}>Orders</Link>
+                            <Link to='/contact' onClick={() => setMobileMenuOpen(false)}>Contact us</Link>
+                        </>
+                    )}
+                </nav>
 
                 <div className='navbar-right'>
                     {!publicLanding && (

@@ -16,6 +16,11 @@
   border-radius: 0;
 }
 
+.navbar-menu-toggle,
+.mobile-navigation {
+  display: none;
+}
+
 .navbar .logo {
   width: 106px;
   flex-shrink: 0;
@@ -268,7 +273,7 @@
 @media (max-width: 750px) {
   .navbar {
     min-height: 68px;
-    padding: 8px 20px;
+    padding: 8px clamp(14px, 5vw, 20px);
   }
 
   .navbar-menu {
@@ -277,6 +282,85 @@
 
   .welcome-nav {
     display: none;
+  }
+
+  .navbar .logo {
+    width: clamp(88px, 25vw, 106px);
+  }
+
+  .navbar-right {
+    gap: clamp(12px, 4vw, 20px);
+  }
+
+  .navbar-right > img,
+  .navbar-search-icon > img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .navbar .navbar-menu-toggle {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+    place-items: center;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    color: var(--food-ink);
+  }
+
+  .navbar-menu-toggle span,
+  .navbar-menu-toggle span::before,
+  .navbar-menu-toggle span::after {
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    content: '';
+  }
+
+  .navbar-menu-toggle span::before,
+  .navbar-menu-toggle span::after {
+    position: absolute;
+    left: 0;
+  }
+
+  .navbar-menu-toggle span::before {
+    top: -6px;
+  }
+
+  .navbar-menu-toggle span::after {
+    top: 6px;
+  }
+
+  .navbar .navbar-menu-toggle:hover {
+    background: var(--food-paper-deep);
+  }
+
+  .mobile-navigation:not([hidden]) {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: grid;
+    padding: 8px clamp(14px, 5vw, 20px) 14px;
+    border-top: 1px solid var(--food-line);
+    background: #fff;
+    box-shadow: 0 12px 20px #322c2812;
+  }
+
+  .mobile-navigation a {
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--food-line);
+    color: var(--food-ink);
+    font-size: 15px;
+  }
+
+  .mobile-navigation a:last-child {
+    border-bottom: 0;
   }
 }
 

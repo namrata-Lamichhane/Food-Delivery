@@ -57,6 +57,7 @@
 .contact-orders-note a {
   color: var(--food-red-dark);
   font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .contact-option a:hover,

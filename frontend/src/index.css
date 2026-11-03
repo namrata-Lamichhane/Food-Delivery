@@ -30,7 +30,7 @@ a{
   color: inherit;
 }
 .app{
-  width: min(1200px, calc(100% - 64px));
+  width: min(1200px, calc(100% - clamp(32px, 10vw, 64px)));
   margin: auto;
   padding-top: 76px;
 }
@@ -68,7 +68,6 @@ a{
 }
 
 .app--signed-in-home {
-  width: 80%;
   --food-ink: #252525;
   --food-muted: #6b6967;
   --food-red: tomato;
@@ -80,7 +79,6 @@ a{
 }
 
 .app--signed-in-menu {
-  width: 80%;
   --food-ink: #252525;
   --food-muted: #6b6967;
   --food-red: tomato;

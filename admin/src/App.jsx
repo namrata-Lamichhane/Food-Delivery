@@ -9,6 +9,7 @@ import Add from './Add/Add.jsx'
 import List from './List/List.jsx'
 import Order from './Orders/Order.jsx'
 import Users from './Users/Users.jsx'
+import Admins from './Admins/Admins.jsx'
 import Login from './Login/Login.jsx'
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
           {(activePage === 'foods' || activePage === 'list') && <List />}
           {activePage === 'orders' && <Order />}
           {activePage === 'users' && <Users />}
+          {activePage === 'admins' && <Admins />}
         </main>
       </div>
     </div>

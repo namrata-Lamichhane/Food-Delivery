@@ -237,11 +237,13 @@ If the database is empty, seed the food catalog:
 npm run seed:food
 ```
 
-Create an administrator account using the provisioning script and its expected configuration:
+Create the first administrator using the provisioning script:
 
 ```bash
-npm run create:admin
+npm run create:admin -- admin@example.com "your-strong-password" "Administrator Name"
 ```
+
+You can create an administrator from the admin panel signup screen at any time. Each administrator signs in with their own email and password. Signed-in administrators can also create accounts from **Manage Admins**.
 
 Start the backend:
 

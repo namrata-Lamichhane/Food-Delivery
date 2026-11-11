@@ -31,11 +31,24 @@ const userSchema = new mongoose.Schema(
             enum: ['user', 'admin'],
             default: 'user',
         },
+        adminSetupKey: {
+            type: String,
+            select: false,
+        },
     },
     {
         timestamps: true,
         // Allows dynamic keys inside cartData to be saved correctly
         minimize: false,
+    }
+)
+
+userSchema.index(
+    { adminSetupKey: 1 },
+    {
+        unique: true,
+        partialFilterExpression: { adminSetupKey: 'first-admin' },
+        name: 'unique_first_admin_setup',
     }
 )
 

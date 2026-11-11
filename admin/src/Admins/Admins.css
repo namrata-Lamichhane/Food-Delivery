@@ -1,0 +1,153 @@
+.admins-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.admins-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admins-header h1 {
+  margin: 0 0 4px;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.admins-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.admins-refresh-btn,
+.admins-submit-btn {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admins-submit-btn {
+  border-color: #e23744;
+  background: #e23744;
+  color: #fff;
+}
+
+.admins-refresh-btn:disabled,
+.admins-submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.admins-form,
+.admins-list-section {
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.admins-form h2,
+.admins-list-section h2 {
+  margin: 0 0 18px;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.admins-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admins-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.admins-form-grid input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  color: #0f172a;
+  font: inherit;
+}
+
+.admins-form-grid input:focus {
+  border-color: #e23744;
+  outline: 2px solid rgba(226, 55, 68, 0.14);
+}
+
+.admins-error {
+  margin: 0 0 14px;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.admins-state {
+  padding: 26px 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+.admins-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.admins-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.admins-table th,
+.admins-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admins-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+}
+
+.admins-table td {
+  color: #334155;
+}
+
+@media (max-width: 640px) {
+  .admins-header {
+    align-items: flex-start;
+  }
+
+  .admins-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admins-form,
+  .admins-list-section {
+    padding: 16px;
+  }
+}

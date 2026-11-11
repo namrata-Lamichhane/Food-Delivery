@@ -9,74 +9,92 @@
 
 .admin-login-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 430px;
   background: #ffffff;
   border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: 30px;
+  padding: 28px 30px;
 }
 
 .admin-login-header {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .admin-login-logo {
   height: 34px;
-  margin-bottom: 18px;
+  margin-bottom: 17px;
   object-fit: contain;
 }
 
 .admin-login-header h2 {
   font-size: 20px;
   color: #1a202c;
-  font-weight: 600;
-  margin-bottom: 5px;
+  font-weight: 700;
+  margin: 0 0 5px;
 }
 
 .admin-login-header p {
-  font-size: 14px;
+  font-size: 13px;
   color: #718096;
+  margin: 0;
+  line-height: 1.5;
 }
 
 .admin-login-error {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #b91c1c;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: 6px;
-  font-size: 13.5px;
-  margin-bottom: 20px;
+  font-size: 13px;
+  margin-bottom: 16px;
 }
 
-.admin-login-form {
+.admin-view-back-btn {
+  display: block;
+  padding: 0;
+  margin: 0 0 14px;
+  border: 0;
+  background: transparent;
+  color: #475569;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.admin-view-back-btn:hover {
+  color: #e23744;
+}
+
+.admin-login-form,
+.admin-welcome-options {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 13px;
 }
 
 .login-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .login-field label {
-  font-size: 13.5px;
+  font-size: 12px;
   font-weight: 500;
   color: #4a5568;
 }
 
 .login-field input {
-  height: 44px;
-  padding: 0 14px;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
   border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 12px;
   color: #1e293b;
   background: #fff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -85,23 +103,51 @@
 .login-field input:focus {
   border-color: #e23744;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.15);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.12);
+}
+
+.login-password-input {
+  position: relative;
+}
+
+.login-password-input input {
+  padding-right: 58px;
+}
+
+.login-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  min-width: 44px;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.login-password-toggle:hover {
+  color: #e23744;
 }
 
 .admin-login-btn {
-  height: 42px;
+  min-height: 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #e23744;
   color: #ffffff;
-  font-size: 15px;
+  font: inherit;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.15s ease, transform 0.05s ease;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .admin-login-btn:hover:not(:disabled) {
@@ -117,10 +163,26 @@
   cursor: not-allowed;
 }
 
-.login-mode-toggle {
-  margin-top: 20px;
-  color: #64748b;
+.admin-welcome-register {
+  min-height: 40px;
+  border: 1px solid #e23744;
+  border-radius: 5px;
+  background: #fff;
+  color: #e23744;
+  font: inherit;
   font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-welcome-register:hover {
+  background: #fff7f7;
+}
+
+.login-mode-toggle {
+  margin: 17px 0 0;
+  color: #718096;
+  font-size: 12px;
   text-align: center;
 }
 
@@ -138,23 +200,12 @@
   text-decoration: underline;
 }
 
-.btn-spinner-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
+@media (max-width: 480px) {
+  .admin-login-wrapper {
+    padding: 12px;
+  }
 
-.btn-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .admin-login-card {
+    padding: 24px 20px;
   }
 }

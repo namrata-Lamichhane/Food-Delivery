@@ -1,0 +1,49 @@
+name: Deploy Food Delivery App to EC2
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            # Install Node.js, Git, and PM2 if missing
+            if ! command -v node &> /dev/null; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs git
+            fi
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            # Clone or pull latest code
+            if [ ! -d "$HOME/Food-Delivery" ]; then
+              git clone https://github.com/namrata-Lamichhane/Food-Delivery.git "$HOME/Food-Delivery"
+            fi
+            cd "$HOME/Food-Delivery"
+            git pull origin main
+
+            # Configure and start backend
+            cd backend
+            cat <<EOF > .env
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            PORT=4000
+            EOF
+            npm install
+            pm2 delete food-backend || true
+            pm2 start server.js --name food-backend
+            pm2 save

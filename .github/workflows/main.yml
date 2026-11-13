@@ -20,7 +20,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-            # 1. Install Node.js 20, Git, Nginx, and PM2 if missing
             if ! command -v node &> /dev/null; then
               curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
               sudo apt-get install -y nodejs git
@@ -30,14 +29,12 @@ jobs:
               sudo npm install -g pm2
             fi
 
-            # 2. Clone or pull latest code
             if [ ! -d "$HOME/Food-Delivery" ]; then
               git clone https://github.com/namrata-Lamichhane/Food-Delivery.git "$HOME/Food-Delivery"
             fi
             cd "$HOME/Food-Delivery"
             git pull origin main
 
-            # 3. Setup and start Backend
             cd "$HOME/Food-Delivery/backend"
             cat <<EOF > .env
             MONGODB_URI=${{ secrets.MONGODB_URI }}
@@ -49,19 +46,16 @@ jobs:
             pm2 start server.js --name food-backend
             pm2 save
 
-            # 4. Build Customer Frontend
             cd "$HOME/Food-Delivery/frontend"
             echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
             npm install
             npm run build
 
-            # 5. Build Admin Panel
             cd "$HOME/Food-Delivery/admin"
             echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
             npm install
             npm run build -- --base=/admin/
 
-            # 6. Replace default Nginx page with Food Delivery app
             sudo tee /etc/nginx/sites-available/food-delivery > /dev/null <<'EOF'
             server {
                 listen 80;
@@ -95,4 +89,5 @@ jobs:
             EOF
             sudo rm -f /etc/nginx/sites-enabled/default
             sudo ln -sf /etc/nginx/sites-available/food-delivery /etc/nginx/sites-enabled/food-delivery
+            sudo chmod o+x /home/ubuntu
             sudo nginx -t && sudo systemctl restart nginx

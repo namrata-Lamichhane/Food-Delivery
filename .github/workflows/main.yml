@@ -20,24 +20,25 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-            # Install Node.js, Git, and PM2 if missing
+            # 1. Install Node.js 20, Git, Nginx, and PM2 if missing
             if ! command -v node &> /dev/null; then
               curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
               sudo apt-get install -y nodejs git
             fi
+            sudo apt-get update -y && sudo apt-get install -y nginx
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
 
-            # Clone or pull latest code
+            # 2. Clone or pull latest code
             if [ ! -d "$HOME/Food-Delivery" ]; then
               git clone https://github.com/namrata-Lamichhane/Food-Delivery.git "$HOME/Food-Delivery"
             fi
             cd "$HOME/Food-Delivery"
             git pull origin main
 
-            # Configure and start backend
-            cd backend
+            # 3. Setup and start Backend
+            cd "$HOME/Food-Delivery/backend"
             cat <<EOF > .env
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
@@ -47,3 +48,51 @@ jobs:
             pm2 delete food-backend || true
             pm2 start server.js --name food-backend
             pm2 save
+
+            # 4. Build Customer Frontend
+            cd "$HOME/Food-Delivery/frontend"
+            echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
+            npm install
+            npm run build
+
+            # 5. Build Admin Panel
+            cd "$HOME/Food-Delivery/admin"
+            echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
+            npm install
+            npm run build -- --base=/admin/
+
+            # 6. Replace default Nginx page with Food Delivery app
+            sudo tee /etc/nginx/sites-available/food-delivery > /dev/null <<'EOF'
+            server {
+                listen 80;
+                server_name _;
+
+                location / {
+                    root /home/ubuntu/Food-Delivery/frontend/dist;
+                    index index.html;
+                    try_files $uri $uri/ /index.html;
+                }
+
+                location /admin {
+                    alias /home/ubuntu/Food-Delivery/admin/dist;
+                    index index.html;
+                    try_files $uri $uri/ /admin/index.html;
+                }
+
+                location /api {
+                    proxy_pass http://localhost:4000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+
+                location /images {
+                    proxy_pass http://localhost:4000;
+                }
+            }
+            EOF
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo ln -sf /etc/nginx/sites-available/food-delivery /etc/nginx/sites-enabled/food-delivery
+            sudo nginx -t && sudo systemctl restart nginx

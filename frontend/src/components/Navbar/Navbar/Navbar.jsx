@@ -6,7 +6,7 @@ import { StoreContext } from '../../../context/StoreContext'
 import LoginPopup from '../../LoginPopup/LoginPopup'
 import { useToast } from '../../../context/ToastContext'
 
-const Navbar = ({ publicLanding = false }) => {
+const Navbar = ({ publicNavigation = false }) => {
     const [showLogin, setShowLogin] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -49,7 +49,7 @@ const Navbar = ({ publicLanding = false }) => {
 
     useEffect(() => {
         setMobileMenuOpen(false)
-    }, [pathname, publicLanding])
+    }, [pathname, publicNavigation])
 
     return (
         <>
@@ -59,8 +59,8 @@ const Navbar = ({ publicLanding = false }) => {
                     <img src={assets.logo} alt='Food Del' className='logo' />
                 </Link>
 
-                {publicLanding ? (
-                    <nav className='welcome-nav' aria-label='Welcome page navigation'>
+                {publicNavigation ? (
+                    <nav className='welcome-nav' aria-label='Public navigation'>
                         <Link to='/#welcome-categories'>Categories</Link>
                         <Link to='/#welcome-featured'>Popular dishes</Link>
                         <Link to='/#welcome-how'>How it works</Link>
@@ -120,7 +120,7 @@ const Navbar = ({ publicLanding = false }) => {
                     aria-label='Mobile navigation'
                     hidden={!mobileMenuOpen}
                 >
-                    {publicLanding ? (
+                    {publicNavigation ? (
                         <>
                             <Link to='/#welcome-categories' onClick={() => setMobileMenuOpen(false)}>Categories</Link>
                             <Link to='/#welcome-featured' onClick={() => setMobileMenuOpen(false)}>Popular dishes</Link>
@@ -138,7 +138,7 @@ const Navbar = ({ publicLanding = false }) => {
                 </nav>
 
                 <div className='navbar-right'>
-                    {!publicLanding && (
+                    {!publicNavigation && (
                         <>
                             <img src={assets.search_icon} alt='' aria-hidden='true' />
 

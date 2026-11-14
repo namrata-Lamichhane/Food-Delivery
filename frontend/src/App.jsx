@@ -15,6 +15,7 @@ const App = () => {
   const { pathname, hash } = useLocation()
   const { token, loading } = useContext(StoreContext)
   const isPublicLanding = pathname === '/' && !token
+  const isPublicNavigation = !token
   const isSignedInHome = pathname === '/' && Boolean(token)
   const isSignedInMenu = pathname === '/menu' && Boolean(token)
   const appClassName = [
@@ -35,7 +36,7 @@ const App = () => {
   return (
     <>
       <div className={appClassName}>
-        <Navbar publicLanding={isPublicLanding} />
+        <Navbar publicNavigation={isPublicNavigation} />
         <Routes>
           <Route
             path='/'

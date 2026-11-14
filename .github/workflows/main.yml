@@ -5,6 +5,12 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  AWS_REGION: us-east-1
+  INSTANCE_NAME: food-delivery-server
+  SG_NAME: food-delivery-sg
+  KEY_NAME: food-delivery-auto-key
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,14 +18,115 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Provision or Reuse EC2 Instance in Sandbox
+        id: ec2
+        run: |
+          set -e
+          VPC_ID=$(aws ec2 describe-vpcs --filters "Name=isDefault,Values=true" --query "Vpcs[0].VpcId" --output text)
+          if [ "$VPC_ID" == "None" ] || [ -z "$VPC_ID" ]; then
+            VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[0].VpcId" --output text)
+          fi
+
+          SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=$SG_NAME" "Name=vpc-id,Values=$VPC_ID" --query "SecurityGroups[0].GroupId" --output text)
+          if [ "$SG_ID" == "None" ] || [ -z "$SG_ID" ]; then
+            SG_ID=$(aws ec2 create-security-group --group-name "$SG_NAME" --description "Food Delivery App SG" --vpc-id "$VPC_ID" --query "GroupId" --output text)
+            aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0
+            aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port 80 --cidr 0.0.0.0/0
+          fi
+
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=$INSTANCE_NAME" "Name=instance-state-name,Values=pending,running" \
+            --query "Reservations[0].Instances[0].InstanceId" --output text)
+
+          if [ "$INSTANCE_ID" == "None" ] || [ -z "$INSTANCE_ID" ]; then
+            aws ec2 delete-key-pair --key-name "$KEY_NAME" || true
+            rm -f /tmp/ec2_key.pem
+            aws ec2 create-key-pair --key-name "$KEY_NAME" --query "KeyMaterial" --output text > /tmp/ec2_key.pem
+            chmod 600 /tmp/ec2_key.pem
+
+            AMI_ID=$(aws ec2 describe-images \
+              --owners 099720109477 \
+              --filters "Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*" "Name=state,Values=available" \
+              --query "sort_by(Images, &CreationDate)[-1].ImageId" --output text)
+
+            SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query "Subnets[0].SubnetId" --output text)
+
+            INSTANCE_ID=$(aws ec2 run-instances \
+              --image-id "$AMI_ID" \
+              --instance-type t3.small \
+              --key-name "$KEY_NAME" \
+              --security-group-ids "$SG_ID" \
+              --subnet-id "$SUBNET_ID" \
+              --associate-public-ip-address \
+              --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$INSTANCE_NAME}]" \
+              --query "Instances[0].InstanceId" --output text)
+
+            echo "Waiting for new EC2 instance ($INSTANCE_ID) to enter running state..."
+            aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
+          else
+            echo "Found existing running EC2 instance ($INSTANCE_ID). Re-creating key if needed..."
+            if [ ! -f /tmp/ec2_key.pem ]; then
+              echo "WARNING: Existing instance uses a previous session key. Terminating and launching a fresh instance with current session key..."
+              aws ec2 terminate-instances --instance-ids "$INSTANCE_ID"
+              aws ec2 wait instance-terminated --instance-ids "$INSTANCE_ID"
+
+              aws ec2 delete-key-pair --key-name "$KEY_NAME" || true
+              aws ec2 create-key-pair --key-name "$KEY_NAME" --query "KeyMaterial" --output text > /tmp/ec2_key.pem
+              chmod 600 /tmp/ec2_key.pem
+
+              AMI_ID=$(aws ec2 describe-images \
+                --owners 099720109477 \
+                --filters "Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*" "Name=state,Values=available" \
+                --query "sort_by(Images, &CreationDate)[-1].ImageId" --output text)
+
+              SUBNET_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query "Subnets[0].SubnetId" --output text)
+
+              INSTANCE_ID=$(aws ec2 run-instances \
+                --image-id "$AMI_ID" \
+                --instance-type t3.small \
+                --key-name "$KEY_NAME" \
+                --security-group-ids "$SG_ID" \
+                --subnet-id "$SUBNET_ID" \
+                --associate-public-ip-address \
+                --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$INSTANCE_NAME}]" \
+                --query "Instances[0].InstanceId" --output text)
+
+              aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
+            fi
+          fi
+
+          PUBLIC_IP=$(aws ec2 describe-instances \
+            --instance-ids "$INSTANCE_ID" \
+            --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+
+          echo "EC2_IP=$PUBLIC_IP" >> $GITHUB_OUTPUT
+          echo "Provisioned EC2 Public IP: $PUBLIC_IP"
+
+          echo "Waiting for SSH daemon to become ready on $PUBLIC_IP..."
+          for i in {1..30}; do
+            if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i /tmp/ec2_key.pem ubuntu@$PUBLIC_IP "echo SSH_READY" 2>/dev/null; then
+              break
+            fi
+            sleep 10
+          done
+
+      - name: Deploy MERN App to Provisioned EC2
+        run: |
+          set -e
+          EC2_IP="${{ steps.ec2.outputs.EC2_IP }}"
+
+          ssh -o StrictHostKeyChecking=no -i /tmp/ec2_key.pem ubuntu@$EC2_IP << EOF
             set -e
+            export DEBIAN_FRONTEND=noninteractive
+
             if ! command -v node &> /dev/null; then
               curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
               sudo apt-get install -y nodejs git
@@ -29,65 +136,76 @@ jobs:
               sudo npm install -g pm2
             fi
 
-            if [ ! -d "$HOME/Food-Delivery" ]; then
-              git clone https://github.com/namrata-Lamichhane/Food-Delivery.git "$HOME/Food-Delivery"
+            if [ ! -d "\$HOME/Food-Delivery" ]; then
+              git clone https://github.com/namrata-Lamichhane/Food-Delivery.git "\$HOME/Food-Delivery"
             fi
-            cd "$HOME/Food-Delivery"
+            cd "\$HOME/Food-Delivery"
             git pull origin main
 
-            cd "$HOME/Food-Delivery/backend"
-            cat <<EOF > .env
-            MONGODB_URI=${{ secrets.MONGODB_URI }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            PORT=4000
-            EOF
+            cd "\$HOME/Food-Delivery/backend"
+            cat <<ENVEOF > .env
+          MONGODB_URI=${{ secrets.MONGODB_URI }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          PORT=4000
+          ENVEOF
             npm install
             pm2 delete food-backend || true
             pm2 start server.js --name food-backend
             pm2 save
 
-            cd "$HOME/Food-Delivery/frontend"
-            echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
+            cd "\$HOME/Food-Delivery/frontend"
+            echo "VITE_API_URL=http://$EC2_IP" > .env
             npm install
             npm run build
 
-            cd "$HOME/Food-Delivery/admin"
-            echo "VITE_API_URL=http://${{ secrets.EC2_HOST }}" > .env
+            cd "\$HOME/Food-Delivery/admin"
+            echo "VITE_API_URL=http://$EC2_IP" > .env
             npm install
             npm run build -- --base=/admin/
 
-            sudo tee /etc/nginx/sites-available/food-delivery > /dev/null <<'EOF'
-            server {
-                listen 80;
-                server_name _;
+            sudo tee /etc/nginx/sites-available/food-delivery > /dev/null <<'NGINXEOF'
+          server {
+              listen 80;
+              server_name _;
 
-                location / {
-                    root /home/ubuntu/Food-Delivery/frontend/dist;
-                    index index.html;
-                    try_files $uri $uri/ /index.html;
-                }
+              location / {
+                  root /home/ubuntu/Food-Delivery/frontend/dist;
+                  index index.html;
+                  try_files \$uri \$uri/ /index.html;
+              }
 
-                location /admin {
-                    alias /home/ubuntu/Food-Delivery/admin/dist;
-                    index index.html;
-                    try_files $uri $uri/ /admin/index.html;
-                }
+              location /admin {
+                  alias /home/ubuntu/Food-Delivery/admin/dist;
+                  index index.html;
+                  try_files \$uri \$uri/ /admin/index.html;
+              }
 
-                location /api {
-                    proxy_pass http://localhost:4000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host $host;
-                    proxy_cache_bypass $http_upgrade;
-                }
+              location /api {
+                  proxy_pass http://localhost:4000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+              }
 
-                location /images {
-                    proxy_pass http://localhost:4000;
-                }
-            }
-            EOF
+              location /images {
+                  proxy_pass http://localhost:4000;
+              }
+          }
+          NGINXEOF
             sudo rm -f /etc/nginx/sites-enabled/default
             sudo ln -sf /etc/nginx/sites-available/food-delivery /etc/nginx/sites-enabled/food-delivery
             sudo chmod o+x /home/ubuntu
             sudo nginx -t && sudo systemctl restart nginx
+          EOF
+
+      - name: Print Live Application URLs
+        run: |
+          EC2_IP="${{ steps.ec2.outputs.EC2_IP }}"
+          echo "### Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "- **Customer Frontend:** http://$EC2_IP" >> $GITHUB_STEP_SUMMARY
+          echo "- **Admin Panel:** http://$EC2_IP/admin" >> $GITHUB_STEP_SUMMARY
+          echo "- **Backend API:** http://$EC2_IP/api/food/list" >> $GITHUB_STEP_SUMMARY
+          echo "Live App: http://$EC2_IP"
+          echo "Admin Panel: http://$EC2_IP/admin"

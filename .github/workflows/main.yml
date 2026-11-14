@@ -14,9 +14,27 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      - name: Check EC2 SSH port
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "Checking SSH port 22..."
+          timeout 10 bash -c "echo > /dev/tcp/${EC2_HOST}/22" \
+            && echo "SSH port 22 is reachable" \
+            || { echo "SSH port 22 is NOT reachable"; exit 1; }
+
       - name: Test SSH connection
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
-          ssh -o StrictHostKeyChecking=yes ubuntu@${{ secrets.EC2_HOST }} \
+          ssh-keyscan -T 10 -H "$EC2_HOST" >> ~/.ssh/known_hosts
+
+          echo "Testing SSH authentication..."
+
+          ssh -vvv \
+            -o BatchMode=yes \
+            -o ConnectTimeout=10 \
+            -o StrictHostKeyChecking=yes \
+            ubuntu@"$EC2_HOST" \
             "echo 'Successfully connected to existing Food Delivery EC2!' && hostname"

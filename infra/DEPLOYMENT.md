@@ -19,8 +19,9 @@ the API at `/api/`.
    - `AWS_SESSION_TOKEN` (required for VocLabs/Learner Lab temporary credentials)
    - `MONGODB_URI`
    - `JWT_SECRET`
-3. Add the repository variable `AWS_REGION` with the region of the VocLabs lab.
-   The EC2 key pair, instance, and stack must all be created in this region.
+3. Optionally add the repository variable `AWS_REGION` with the region of the
+   VocLabs lab. If it is not set, the workflow defaults to `us-east-1`. The EC2
+   key pair, instance, and stack must all be created in this region.
 4. Ensure the credentials used by Actions can deploy the stack and read its
    outputs, and can call `ssm:GetParameter` with decryption for
    `/ec2/keypair/*`. Key-pair creation and standard CloudFormation/EC2 actions

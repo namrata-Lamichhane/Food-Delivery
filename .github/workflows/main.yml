@@ -1,40 +1,49 @@
-
-name: Test EC2 Connection
+name: Deploy Food Delivery
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  test-connection:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to existing EC2
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Check EC2 SSH port
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-        run: |
-          echo "Checking SSH port 22..."
-          timeout 10 bash -c "echo > /dev/tcp/${EC2_HOST}/22" \
-            && echo "SSH port 22 is reachable" \
-            || { echo "SSH port 22 is NOT reachable"; exit 1; }
-
-      - name: Test SSH connection
+      - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -T 10 -H "$EC2_HOST" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
-          echo "Testing SSH authentication..."
+          ssh -o BatchMode=yes ubuntu@"$EC2_HOST" 'bash -se' <<'EOF'
+            set -e
 
-          ssh -vvv \
-            -o BatchMode=yes \
-            -o ConnectTimeout=10 \
-            -o StrictHostKeyChecking=yes \
-            ubuntu@"$EC2_HOST" \
-            "echo 'Successfully connected to existing Food Delivery EC2!' && hostname"
+            cd /home/ubuntu/Food-Delivery
+            git fetch origin main
+            git reset --hard origin/main
+
+            cd backend
+            npm ci
+
+            cd ../frontend
+            npm ci
+            npm run build
+
+            cd ../admin
+            npm ci
+            npm run build
+
+            pm2 restart food-backend --update-env
+
+            curl -fsS http://localhost/api/food/list > /dev/null
+
+            echo "Food Delivery deployment successful!"
+          EOF

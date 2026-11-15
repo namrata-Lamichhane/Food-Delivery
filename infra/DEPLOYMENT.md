@@ -35,9 +35,9 @@ Push to `main` or run **Actions → Deploy Food Delivery → Run workflow**. The
 
 1. Applies `infra/ec2-instance.yaml` as the `food-delivery` stack with a
    `t2.micro` instance and Ubuntu 24.04.
-2. Reads `PublicIP` and `SSMKeyPath` from the stack outputs, downloads the
-   generated private key from Parameter Store to the temporary runner, and
-   removes that file at the end of the job.
+2. Reads `PublicIP` and `SSMKeyPath` from the stack outputs, retrieves the
+   generated private key from Parameter Store, and passes it masked to the SSH
+   and SCP actions.
 3. Copies both build artifacts to the Nginx document roots and connects with
    SSH to pull the latest backend, write `backend/.env`, install production
    dependencies, restart PM2, and check the API.

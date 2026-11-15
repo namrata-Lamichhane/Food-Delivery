@@ -98,12 +98,28 @@ jobs:
             exit 1
           fi
 
-          aws ssm get-parameter \
+          private_key="$(aws ssm get-parameter \
             --name "$key_path" \
             --with-decryption \
             --query 'Parameter.Value' \
-            --output text > "$GITHUB_WORKSPACE/.deploy_key"
-          chmod 600 "$GITHUB_WORKSPACE/.deploy_key"
+            --output text)"
+          if [ -z "$private_key" ]; then
+            echo "SSM returned an empty EC2 private key." >&2
+            exit 1
+          fi
+
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              echo "::add-mask::$line"
+            fi
+          done <<< "$private_key"
+
+          delimiter="SSH_KEY_$(openssl rand -hex 16)"
+          {
+            echo "private_key<<$delimiter"
+            printf '%s\n' "$private_key"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
 
           echo "public_ip=$public_ip" >> "$GITHUB_OUTPUT"
 
@@ -112,7 +128,7 @@ jobs:
         with:
           host: ${{ steps.instance.outputs.public_ip }}
           username: ubuntu
-          key_path: /github/workspace/.deploy_key
+          key: ${{ steps.instance.outputs.private_key }}
           script: sudo cloud-init status --wait
 
       - name: Download frontend build artifacts
@@ -132,7 +148,7 @@ jobs:
         with:
           host: ${{ steps.instance.outputs.public_ip }}
           username: ubuntu
-          key_path: /github/workspace/.deploy_key
+          key: ${{ steps.instance.outputs.private_key }}
           source: frontend/dist/**
           target: /var/www/food-del/frontend/dist
           strip_components: 2
@@ -143,7 +159,7 @@ jobs:
         with:
           host: ${{ steps.instance.outputs.public_ip }}
           username: ubuntu
-          key_path: /github/workspace/.deploy_key
+          key: ${{ steps.instance.outputs.private_key }}
           source: admin/dist/**
           target: /var/www/food-del/admin/dist
           strip_components: 2
@@ -157,7 +173,7 @@ jobs:
         with:
           host: ${{ steps.instance.outputs.public_ip }}
           username: ubuntu
-          key_path: /github/workspace/.deploy_key
+          key: ${{ steps.instance.outputs.private_key }}
           envs: MONGODB_URI,JWT_SECRET
           script: |
             set -eu
@@ -189,7 +205,3 @@ jobs:
 
             echo "Backend health check failed after 10 attempts." >&2
             exit 1
-
-      - name: Remove downloaded SSH key
-        if: always()
-        run: rm -f "$GITHUB_WORKSPACE/.deploy_key"

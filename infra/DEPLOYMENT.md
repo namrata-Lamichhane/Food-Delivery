@@ -40,7 +40,8 @@ Push to `main` or run **Actions → Deploy Food Delivery → Run workflow**. The
    and SCP actions.
 3. Copies both build artifacts to the Nginx document roots and connects with
    SSH to pull the latest backend, write `backend/.env`, install production
-   dependencies, restart PM2, and check the API.
+   dependencies, enable/reload the repository's Nginx site configuration,
+   restart PM2, and check the customer site, admin site, and API.
 
 After a successful first deployment, `PublicURL` is available in the
 CloudFormation stack outputs. The old `EC2_HOST` and `EC2_SSH_KEY` secrets are

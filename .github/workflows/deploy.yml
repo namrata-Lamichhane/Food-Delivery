@@ -187,6 +187,13 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            sudo ln -sfn /var/www/food-del/infra/nginx.conf /etc/nginx/sites-available/food-del
+            sudo ln -sfn /etc/nginx/sites-available/food-del /etc/nginx/sites-enabled/food-del
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo nginx -t
+            sudo systemctl enable --now nginx
+            sudo systemctl reload nginx
+
             cd backend
             umask 077
             printf 'MONGODB_URI=%s\nJWT_SECRET=%s\n' "$MONGODB_URI" "$JWT_SECRET" > .env
@@ -196,7 +203,9 @@ jobs:
             pm2 save
 
             for attempt in $(seq 1 10); do
-              if curl -fsS http://localhost/api/food/list > /dev/null; then
+              if curl -fsS http://localhost/ > /dev/null &&
+                 curl -fsS http://localhost/admin/ > /dev/null &&
+                 curl -fsS http://localhost/api/food/list > /dev/null; then
                 echo "Food Delivery deployment successful."
                 exit 0
               fi

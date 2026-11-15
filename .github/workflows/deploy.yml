@@ -1,0 +1,195 @@
+name: Deploy Food Delivery
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  STACK_NAME: food-delivery
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            admin/package-lock.json
+
+      - name: Build customer frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build admin panel
+        working-directory: admin
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload customer build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload admin build
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-dist
+          path: admin/dist/
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy CloudFormation stack
+        run: |
+          aws cloudformation deploy \
+            --template-file infra/ec2-instance.yaml \
+            --stack-name "$STACK_NAME" \
+            --parameter-overrides InstanceType=t2.micro \
+            --no-fail-on-empty-changeset
+
+      - name: Read instance outputs and download SSH key
+        id: instance
+        run: |
+          public_ip="$(aws cloudformation describe-stacks \
+            --stack-name "$STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='PublicIP'].OutputValue | [0]" \
+            --output text)"
+          key_path="$(aws cloudformation describe-stacks \
+            --stack-name "$STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='SSMKeyPath'].OutputValue | [0]" \
+            --output text)"
+
+          if [ -z "$public_ip" ] || [ "$public_ip" = "None" ] ||
+             [ -z "$key_path" ] || [ "$key_path" = "None" ]; then
+            echo "CloudFormation did not return PublicIP and SSMKeyPath outputs." >&2
+            exit 1
+          fi
+
+          aws ssm get-parameter \
+            --name "$key_path" \
+            --with-decryption \
+            --query 'Parameter.Value' \
+            --output text > "$GITHUB_WORKSPACE/.deploy_key"
+          chmod 600 "$GITHUB_WORKSPACE/.deploy_key"
+
+          echo "public_ip=$public_ip" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for EC2 bootstrap
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ steps.instance.outputs.public_ip }}
+          username: ubuntu
+          key_path: /github/workspace/.deploy_key
+          script: sudo cloud-init status --wait
+
+      - name: Download frontend build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+
+      - name: Download admin build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: admin-dist
+          path: admin/dist
+
+      - name: Copy customer frontend to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.instance.outputs.public_ip }}
+          username: ubuntu
+          key_path: /github/workspace/.deploy_key
+          source: frontend/dist/**
+          target: /var/www/food-del/frontend/dist
+          strip_components: 2
+          overwrite: true
+
+      - name: Copy admin panel to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.instance.outputs.public_ip }}
+          username: ubuntu
+          key_path: /github/workspace/.deploy_key
+          source: admin/dist/**
+          target: /var/www/food-del/admin/dist
+          strip_components: 2
+          overwrite: true
+
+      - name: Update backend and restart PM2
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        with:
+          host: ${{ steps.instance.outputs.public_ip }}
+          username: ubuntu
+          key_path: /github/workspace/.deploy_key
+          envs: MONGODB_URI,JWT_SECRET
+          script: |
+            set -eu
+
+            if [ -z "$MONGODB_URI" ] || [ -z "$JWT_SECRET" ]; then
+              echo "MONGODB_URI and JWT_SECRET must be configured as GitHub Actions secrets." >&2
+              exit 1
+            fi
+
+            cd /var/www/food-del
+            git fetch origin main
+            git reset --hard origin/main
+
+            cd backend
+            umask 077
+            printf 'MONGODB_URI=%s\nJWT_SECRET=%s\n' "$MONGODB_URI" "$JWT_SECRET" > .env
+            npm ci --omit=dev
+            mkdir -p uploads logs
+            pm2 startOrReload ecosystem.config.cjs --update-env
+            pm2 save
+
+            for attempt in $(seq 1 10); do
+              if curl -fsS http://localhost/api/food/list > /dev/null; then
+                echo "Food Delivery deployment successful."
+                exit 0
+              fi
+              sleep 3
+            done
+
+            echo "Backend health check failed after 10 attempts." >&2
+            exit 1
+
+      - name: Remove downloaded SSH key
+        if: always()
+        run: rm -f "$GITHUB_WORKSPACE/.deploy_key"

@@ -8,7 +8,7 @@ module.exports = {
   apps: [
     {
       name: 'food-del-backend',
-      script: 'server.js',
+      script: 'local.js',
       cwd: __dirname,
       instances: 1,
       exec_mode: 'fork',

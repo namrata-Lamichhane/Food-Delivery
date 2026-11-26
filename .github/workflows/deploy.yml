@@ -212,5 +212,11 @@ jobs:
               sleep 3
             done
 
+            echo "Backend startup errors:"
+            if grep -q 'Server startup failed:' logs/pm2-error.log; then
+              grep 'Server startup failed:' logs/pm2-error.log | tail -n 10
+            else
+              echo "No backend startup error details found in the PM2 error log."
+            fi
             echo "Backend health check failed after 10 attempts." >&2
             exit 1

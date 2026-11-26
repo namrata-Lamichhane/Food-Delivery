@@ -10,7 +10,13 @@ const startServer = async () => {
             console.log(`Server listening on port ${port}`)
         })
     } catch (error) {
-        console.error('Server startup failed:', error.name)
+        const errorName = error instanceof Error ? error.name : 'UnknownError'
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        const uri = process.env.MONGODB_URI
+        const safeMessage = uri
+            ? errorMessage.split(uri).join('[redacted MongoDB URI]')
+            : errorMessage
+        console.error('Server startup failed:', errorName, safeMessage)
         process.exitCode = 1
     }
 }

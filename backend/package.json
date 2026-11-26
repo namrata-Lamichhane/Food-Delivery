@@ -7,7 +7,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon server.js",
+    "server": "nodemon local.js",
     "seed:food": "node scripts/seedFood.js",
     "create:admin": "node scripts/createAdmin.js",
     "test": "node test_e2e.mjs"

@@ -20,18 +20,11 @@ import orderRouter from './routes/orderRoute.js'
 
 // app config
 const app = express()
-const port = process.env.PORT || 4000
 const configuredOrigins = (process.env.CORS_ORIGINS || '')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean)
 const allowedOrigins = new Set(configuredOrigins)
-
-console.log('CORS startup diagnostic', {
-    corsOriginsPresent: process.env.CORS_ORIGINS !== undefined,
-    nodeEnvIsProduction: process.env.NODE_ENV === 'production',
-    parsedAllowedOriginsCount: configuredOrigins.length,
-})
 
 if (process.env.NODE_ENV !== 'production') {
     allowedOrigins.add('http://localhost:5173')
@@ -55,6 +48,23 @@ app.use(
     })
 )
 
+app.use('/api', async (req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        return next()
+    }
+
+    try {
+        await connectDB()
+        next()
+    } catch (error) {
+        console.error('API database connection failed:', error.name)
+        res.status(503).json({
+            success: false,
+            message: 'Database is temporarily unavailable.',
+        })
+    }
+})
+
 // Keep serving bundled and legacy local images during the Cloudinary migration.
 app.use('/images', express.static(path.join(__dirname, 'uploads')))
 
@@ -77,16 +87,4 @@ app.get('/healthz', (req, res) => {
     res.json({ success: true, database: 'connected' })
 })
 
-const startServer = async () => {
-    try {
-        await connectDB()
-        app.listen(port, () => {
-            console.log(`Server listening on port ${port}`)
-        })
-    } catch (error) {
-        console.error('Server startup failed:', error.message)
-        process.exit(1)
-    }
-}
-
-startServer()
+export default app

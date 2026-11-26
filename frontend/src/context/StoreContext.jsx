@@ -7,6 +7,11 @@ import { useToast } from './ToastContext'
 export const StoreContext = createContext(null)
 export const DELIVERY_FEE = 50
 
+const getFoodImageUrl = (image) =>
+    typeof image === 'string' && /^https?:\/\//i.test(image)
+        ? image
+        : `${url}/images/${image}`
+
 const StoreContextProvider = (props) => {
     const showToast = useToast()
     const [cartItems, setCartItems] = useState({})
@@ -25,10 +30,9 @@ const StoreContextProvider = (props) => {
         try {
             const { data } = await axios.get(`${url}/api/food/list`)
             if (data.success && data.data.length > 0) {
-                // Prepend the server image base URL so every item.image is a full URL
                 const foods = data.data.map((item) => ({
                     ...item,
-                    image: `${url}/images/${item.image}`,
+                    image: getFoodImageUrl(item.image),
                 }))
                 setFoodList(foods)
                 return

@@ -22,10 +22,13 @@ const foodSchema = new mongoose.Schema(
             min: [0, 'Price cannot be negative'],
         },
         image: {
-            // Stores only the filename (e.g. "food_1.png").
-            // The full URL is constructed by the frontend as: url + '/images/' + image
+            // Stores a Cloudinary URL for new uploads or a legacy local filename.
             type: String,
-            required: [true, 'Image filename is required'],
+            required: [true, 'Image is required'],
+        },
+        imagePublicId: {
+            type: String,
+            trim: true,
         },
         category: {
             type: String,

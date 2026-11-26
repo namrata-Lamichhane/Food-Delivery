@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { assets, url } from '../assets/assets.js'
+import { createFoodUploadRequestData, validateFoodImage } from '../utils/foodImageUpload.js'
 import './Add.css'
 
 const categories = [
@@ -39,13 +40,9 @@ const Add = ({ onSuccess }) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please upload a valid image file (PNG, JPG, WebP).')
-      return
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image size must be less than 5MB.')
+    const validationError = validateFoodImage(file)
+    if (validationError) {
+      toast.error(validationError)
       return
     }
 
@@ -90,12 +87,12 @@ const Add = ({ onSuccess }) => {
 
     setSubmitting(true)
     try {
-      const data = new FormData()
-      data.append('name', formData.name.trim())
-      data.append('description', formData.description.trim())
-      data.append('price', priceNum)
-      data.append('category', formData.category)
-      data.append('image', imageFile)
+      const data = await createFoodUploadRequestData({
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        price: priceNum,
+        category: formData.category,
+      }, imageFile, token)
 
       const response = await axios.post(`${url}/api/food/add`, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -120,7 +117,8 @@ const Add = ({ onSuccess }) => {
       if (onSuccess) onSuccess()
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Could not add food item.'
-      toast.error(msg)
+      const cleanupWarning = err.response?.data?.cleanupWarning
+      toast.error(cleanupWarning ? `${msg} ${cleanupWarning}` : msg)
     } finally {
       setSubmitting(false)
     }

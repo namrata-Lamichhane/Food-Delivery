@@ -19,7 +19,7 @@ userRouter.post('/register', registerUser)
 // First-admin setup is public only while no administrator account exists.
 userRouter.get('/admin-setup', getAdminSetupStatus)
 userRouter.post('/admin-setup', registerFirstAdmin)
-userRouter.post('/admin-signup', registerAdminAccount)
+userRouter.post('/admin-signup', adminMiddleware, registerAdminAccount)
 
 // Administrator account management is restricted to signed-in administrators.
 userRouter.get('/admins', adminMiddleware, getAdminAccounts)

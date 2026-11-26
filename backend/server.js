@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
+import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -20,16 +21,35 @@ import orderRouter from './routes/orderRoute.js'
 // app config
 const app = express()
 const port = process.env.PORT || 4000
+const configuredOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+const allowedOrigins = new Set(configuredOrigins)
 
-// connect to database
-connectDB()
+if (process.env.NODE_ENV !== 'production') {
+    allowedOrigins.add('http://localhost:5173')
+    allowedOrigins.add('http://localhost:5174')
+    allowedOrigins.add('http://localhost:5175')
+    allowedOrigins.add('http://127.0.0.1:5173')
+    allowedOrigins.add('http://127.0.0.1:5175')
+}
+
+if (process.env.NODE_ENV === 'production' && configuredOrigins.length === 0) {
+    throw new Error('CORS_ORIGINS must contain the allowed production frontend origins.')
+}
 
 // middleware
 app.use(express.json())
-app.use(cors())
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            callback(null, !origin || allowedOrigins.has(origin))
+        },
+    })
+)
 
-// serve uploaded food images as static files
-// Frontend accesses them as: http://localhost:4000/images/<filename>
+// Keep serving bundled and legacy local images during the Cloudinary migration.
 app.use('/images', express.static(path.join(__dirname, 'uploads')))
 
 // application routes — GET, POST, PATCH, DELETE only (no PUT)
@@ -43,6 +63,24 @@ app.get('/', (req, res) => {
     res.json({ success: true, message: 'API Working' })
 })
 
-app.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}`)
+app.get('/healthz', (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ success: false, message: 'Database is not ready.' })
+    }
+
+    res.json({ success: true, database: 'connected' })
 })
+
+const startServer = async () => {
+    try {
+        await connectDB()
+        app.listen(port, () => {
+            console.log(`Server listening on port ${port}`)
+        })
+    } catch (error) {
+        console.error('Server startup failed:', error.message)
+        process.exit(1)
+    }
+}
+
+startServer()

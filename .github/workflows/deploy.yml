@@ -1,9 +1,6 @@
 name: Deploy Food Delivery
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -37,6 +34,8 @@ jobs:
 
       - name: Build admin panel
         working-directory: admin
+        env:
+          VITE_BASE_PATH: /admin/
         run: |
           npm ci
           npm run build

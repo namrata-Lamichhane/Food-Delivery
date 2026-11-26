@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { assets, url } from '../assets/assets.js'
+import { createFoodUploadRequestData, validateFoodImage } from '../utils/foodImageUpload.js'
 import './List.css'
 
 const categories = [
@@ -14,6 +15,11 @@ const categories = [
   'Pasta',
   'Noodles',
 ]
+
+const getFoodImageUrl = (image) =>
+  typeof image === 'string' && /^https?:\/\//i.test(image)
+    ? image
+    : `${url}/images/${image}`
 
 const List = () => {
   const [foods, setFoods] = useState([])
@@ -141,12 +147,12 @@ const List = () => {
 
     setAdding(true)
     try {
-      const data = new FormData()
-      data.append('name', addFormData.name.trim())
-      data.append('description', addFormData.description.trim())
-      data.append('price', priceNum)
-      data.append('category', addFormData.category)
-      data.append('image', addImageFile)
+      const data = await createFoodUploadRequestData({
+        name: addFormData.name.trim(),
+        description: addFormData.description.trim(),
+        price: priceNum,
+        category: addFormData.category,
+      }, addImageFile, token)
 
       const res = await axios.post(`${url}/api/food/add`, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -166,7 +172,8 @@ const List = () => {
       fetchFoods()
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Failed to add food.'
-      toast.error(msg)
+      const cleanupWarning = err.response?.data?.cleanupWarning
+      toast.error(cleanupWarning ? `${msg} ${cleanupWarning}` : msg)
     } finally {
       setAdding(false)
     }
@@ -182,7 +189,7 @@ const List = () => {
       category: food.category || 'Salad',
     })
     setEditImageFile(null)
-    setEditImagePreview(`${url}/images/${food.image}`)
+    setEditImagePreview(getFoodImageUrl(food.image))
   }
 
   const handleEditSubmit = async (e) => {
@@ -206,15 +213,13 @@ const List = () => {
 
     setUpdating(true)
     try {
-      const data = new FormData()
-      data.append('id', editTarget._id)
-      data.append('name', editFormData.name.trim())
-      data.append('description', editFormData.description.trim())
-      data.append('price', priceNum)
-      data.append('category', editFormData.category)
-      if (editImageFile) {
-        data.append('image', editImageFile)
-      }
+      const data = await createFoodUploadRequestData({
+        id: editTarget._id,
+        name: editFormData.name.trim(),
+        description: editFormData.description.trim(),
+        price: priceNum,
+        category: editFormData.category,
+      }, editImageFile, token)
 
       const res = await axios.patch(`${url}/api/food/update`, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -229,11 +234,16 @@ const List = () => {
         prev.map((item) => (item._id === updated._id ? updated : item))
       )
 
-      toast.success(`${updated.name} updated successfully!`)
+      if (res.data.cleanupWarning) {
+        toast.warning(res.data.cleanupWarning)
+      } else {
+        toast.success(`${updated.name} updated successfully!`)
+      }
       setEditTarget(null)
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Could not update food item.'
-      toast.error(msg)
+      const cleanupWarning = err.response?.data?.cleanupWarning
+      toast.error(cleanupWarning ? `${msg} ${cleanupWarning}` : msg)
     } finally {
       setUpdating(false)
     }
@@ -260,7 +270,11 @@ const List = () => {
       }
 
       setFoods((prev) => prev.filter((item) => item._id !== deleteTarget._id))
-      toast.success(`${deleteTarget.name} removed successfully.`)
+      if (res.data.cleanupWarning) {
+        toast.warning(res.data.cleanupWarning)
+      } else {
+        toast.success(`${deleteTarget.name} removed successfully.`)
+      }
       setDeleteTarget(null)
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Failed to delete food item.'
@@ -353,7 +367,7 @@ const List = () => {
                 <tr key={food._id}>
                   <td className="food-thumb-td">
                     <img
-                      src={`${url}/images/${food.image}`}
+                      src={getFoodImageUrl(food.image)}
                       alt={food.name}
                       className="food-table-thumbnail"
                       onError={(e) => {
@@ -423,6 +437,11 @@ const List = () => {
                       onChange={(e) => {
                         const file = e.target.files?.[0]
                         if (file) {
+                          const validationError = validateFoodImage(file)
+                          if (validationError) {
+                            toast.error(validationError)
+                            return
+                          }
                           setAddImageFile(file)
                           setAddImagePreview(URL.createObjectURL(file))
                         }
@@ -540,6 +559,11 @@ const List = () => {
                       onChange={(e) => {
                         const file = e.target.files?.[0]
                         if (file) {
+                          const validationError = validateFoodImage(file)
+                          if (validationError) {
+                            toast.error(validationError)
+                            return
+                          }
                           setEditImageFile(file)
                           setEditImagePreview(URL.createObjectURL(file))
                         }

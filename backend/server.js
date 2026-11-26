@@ -27,6 +27,12 @@ const configuredOrigins = (process.env.CORS_ORIGINS || '')
     .filter(Boolean)
 const allowedOrigins = new Set(configuredOrigins)
 
+console.log('CORS startup diagnostic', {
+    corsOriginsPresent: process.env.CORS_ORIGINS !== undefined,
+    nodeEnvIsProduction: process.env.NODE_ENV === 'production',
+    parsedAllowedOriginsCount: configuredOrigins.length,
+})
+
 if (process.env.NODE_ENV !== 'production') {
     allowedOrigins.add('http://localhost:5173')
     allowedOrigins.add('http://localhost:5174')

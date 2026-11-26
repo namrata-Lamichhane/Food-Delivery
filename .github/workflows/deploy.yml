@@ -169,7 +169,7 @@ jobs:
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          CORS_ORIGINS: ${{ vars.CORS_ORIGINS }}
+          CORS_ORIGINS: ${{ vars.CORS_ORIGINS || format('http://{0}', steps.instance.outputs.public_ip) }}
         with:
           host: ${{ steps.instance.outputs.public_ip }}
           username: ubuntu
@@ -178,8 +178,8 @@ jobs:
           script: |
             set -eu
 
-            if [ -z "$MONGODB_URI" ] || [ -z "$JWT_SECRET" ] || [ -z "$CORS_ORIGINS" ]; then
-              echo "MONGODB_URI and JWT_SECRET secrets and the CORS_ORIGINS repository variable must be configured." >&2
+            if [ -z "$MONGODB_URI" ] || [ -z "$JWT_SECRET" ]; then
+              echo "MONGODB_URI and JWT_SECRET secrets must be configured." >&2
               exit 1
             fi
 

@@ -199,7 +199,8 @@ jobs:
             printf 'MONGODB_URI=%s\nJWT_SECRET=%s\nCORS_ORIGINS=%s\n' "$MONGODB_URI" "$JWT_SECRET" "$CORS_ORIGINS" > .env
             npm ci --omit=dev
             mkdir -p uploads logs
-            pm2 startOrReload ecosystem.config.cjs --update-env
+            pm2 delete food-del-backend 2>/dev/null || true
+            pm2 start ecosystem.config.cjs
             pm2 save
 
             for attempt in $(seq 1 10); do

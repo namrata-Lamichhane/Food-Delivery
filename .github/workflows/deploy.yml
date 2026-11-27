@@ -199,11 +199,15 @@ jobs:
             printf 'MONGODB_URI=%s\nJWT_SECRET=%s\nCORS_ORIGINS=%s\n' "$MONGODB_URI" "$JWT_SECRET" "$CORS_ORIGINS" > .env
             npm ci --omit=dev
             mkdir -p uploads logs
+
+            # Force clean restart so new .env is always picked up
             pm2 delete food-del-backend 2>/dev/null || true
             pm2 start ecosystem.config.cjs
             pm2 save
 
+            # Wait up to 30 seconds for backend to be ready
             for attempt in $(seq 1 10); do
+              echo "Health check attempt $attempt/10..."
               if curl -fsS http://localhost/ > /dev/null &&
                  curl -fsS http://localhost/admin/ > /dev/null &&
                  curl -fsS http://127.0.0.1:4000/ > /dev/null; then
@@ -213,11 +217,13 @@ jobs:
               sleep 3
             done
 
-            echo "Backend startup errors:"
-            if grep -q 'Server startup failed:' logs/pm2-error.log; then
-              grep 'Server startup failed:' logs/pm2-error.log | tail -n 10
-            else
-              echo "No backend startup error details found in the PM2 error log."
-            fi
+            echo "=== PM2 Status ==="
+            pm2 list
+            echo "=== PM2 Error Log (last 30 lines) ==="
+            tail -n 30 logs/pm2-error.log || echo "(no error log)"
+            echo "=== PM2 Output Log (last 30 lines) ==="
+            tail -n 30 logs/pm2-out.log || echo "(no output log)"
+            echo "=== .env keys written (values hidden) ==="
+            cut -d= -f1 .env
             echo "Backend health check failed after 10 attempts." >&2
             exit 1
